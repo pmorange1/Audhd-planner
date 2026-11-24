@@ -60,7 +60,8 @@ h2{font:700 20px/1.2 var(--head);margin:30px 0 4px}h2:first-child{margin-top:4px
 .nd.on{background:var(--c);border-color:var(--c);color:#fff;box-shadow:0 0 10px var(--c)}
 .nd.nxt{border-color:var(--c);animation:pulse 1.8s infinite}
 @keyframes pulse{50%{box-shadow:0 0 0 5px color-mix(in srgb,var(--c) 25%,transparent)}}
-.goal{border:2px dashed var(--line);border-radius:12px;padding:8px 12px;color:var(--mute);font-size:13px}
+.goal{border:1.5px solid var(--line);background:color-mix(in srgb,var(--c,var(--tier)) 7%,var(--bg));border-radius:12px;padding:10px 12px;color:var(--ink);font-size:13px;line-height:1.4}
+.goal b{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--c,var(--tier));margin-bottom:2px}
 details{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin-bottom:8px}
 summary{cursor:pointer;font-weight:800}details p{margin:8px 0 0;color:var(--mute)}
 .foot{display:flex;gap:8px;margin-top:20px}.foot .btn{flex:1;color:var(--ink);--c:var(--line)}
@@ -104,7 +105,7 @@ summary{cursor:pointer;font-weight:800}details p{margin:8px 0 0;color:var(--mute
 <main id="app"></main>
 <nav class="nav" id="nav"></nav>
 <div class="toast" id="toast" hidden role="status"></div>
-<div class="modal" id="modal" hidden><div class="dlg" role="dialog" aria-modal="true" aria-labelledby="mt"><h3 id="mt">Delete everything?</h3><p>This erases all Marks, kilometres, wishlist stops, skill progress and your Ignition Level, then starts you fresh. It cannot be undone.</p><div class="row"><button class="btn" id="mc" data-a="cancel">Keep my progress</button><button class="btn danger" data-a="hardreset">Delete everything</button></div></div></div>
+<div class="modal" id="modal" hidden><div class="dlg" role="dialog" aria-modal="true" aria-labelledby="mt"><h3 id="mt">Delete everything?</h3><p>This erases all Marks, kilometres, wishlist stops, skill progress and your Travel Rank, then starts you fresh. It cannot be undone.</p><div class="row"><button class="btn" id="mc" data-a="cancel">Keep my progress</button><button class="btn danger" data-a="hardreset">Delete everything</button></div></div></div>
 <script>
 (function(){
 var KEY="stronghold-v1",LAP=0,$=function(i){return document.getElementById(i)};
@@ -122,7 +123,44 @@ var DUTIES={green:[HE,PA,{id:"led1",e:"&#128203;",n:"Work Block I",d:"LVLW and P
 var OFF={led1:{id:"led1",e:"&#128296;",n:"Home Focus I",d:"Home project, life admin, study, stable jobs or a hobby.",m:45},led2:{id:"led2",e:"&#127793;",n:"Home Focus II",d:"A second block. Pick a different category if you like.",m:45}};
 function DL(t){return DUTIES[t].map(function(d){return S.off&&OFF[d.id]?OFF[d.id]:d})}
 function K(m){return Math.round(m*1.5)}
-var HOB=[{id:"music",e:"&#127929;",n:"Music Production",d:"Maschine 3 and MiniFreak.",c:"#7b5ea7"},{id:"origami",e:"&#129419;",n:"Origami",d:"Geometric folds and wildlife models.",c:"#c2543a"},{id:"play",e:"&#127918;",n:"PlayStation",d:"Red Dead 2 or Unrailed! with Georgie.",c:"#2f7d9a"},{id:"sail",e:"&#9973;",n:"Dinghy Sailing",d:"Hawley Lake. Back ashore before 2 PM.",c:"#2a6fb0"},{id:"boulder",e:"&#129495;",n:"Bouldering",d:"Evening sessions, after 5 PM.",c:"#8a6d3b"},{id:"build",e:"&#129690;",n:"Tavern Carpentry",d:"Framing, carpentry and decor.",c:"#5f8a2e"}];
+var HOB=[
+ {id:"music",e:"&#127929;",n:"Music Production",d:"Maschine 3 and MiniFreak.",c:"#7b5ea7",obj:[
+  "Route Maschine 3 audio & build a 4-bar drum loop",
+  "Design 3 custom MiniFreak patches & save a template",
+  "Arrange a full 2-minute track with intro, drop & outro",
+  "Perform a live 15-minute hardware jam without stopping"
+ ]},
+ {id:"origami",e:"&#129419;",n:"Origami",d:"Geometric folds and wildlife models.",c:"#c2543a",obj:[
+  "Master crisp valley/mountain folds & preliminary bases",
+  "Complete 3 intermediate animals from single uncut squares",
+  "Shape a realistic giraffe or wildlife model using wet-folding",
+  "Build a multi-piece framed wildlife diorama"
+ ]},
+ {id:"play",e:"&#127918;",n:"PlayStation",d:"Red Dead 2 or Unrailed! with Georgie.",c:"#2f7d9a",obj:[
+  "Settle in for a relaxed co-op session with zero pressure",
+  "Coordinate smooth track-building streaks in Unrailed!",
+  "Complete a major story chapter or co-op campaign together",
+  "Master a favourite co-op world or 100% a shared favourite"
+ ]},
+ {id:"sail",e:"&#9973;",n:"Dinghy Sailing",d:"Hawley Lake. Back ashore before 2 PM.",c:"#2a6fb0",obj:[
+  "Rig a centre-main dinghy (RS Zest) & launch smoothly",
+  "Link clean tacks and gybes without losing boat speed",
+  "Read wind shifts, trim sails & handle a controlled capsize",
+  "Sail a full lake course confidently solo before 2 PM"
+ ]},
+ {id:"boulder",e:"&#129495;",n:"Bouldering",d:"Evening sessions, after 5 PM.",c:"#8a6d3b",obj:[
+  "Climb V0-V1 routes focusing on quiet feet & straight arms",
+  "Use flagging, heel hooks & hip-to-wall balance on V2s",
+  "Read sequences from the mat & send 3+ V3 problems",
+  "Climb overhangs & technical slabs with controlled power"
+ ]},
+ {id:"build",e:"&#129690;",n:"Tavern Carpentry",d:"Framing, carpentry and decor.",c:"#5f8a2e",obj:[
+  "Measure, square & frame the 3-sided banquette seating",
+  "Build the 900mm gaming table & fit the hidden mini-fridge",
+  "Finish the upturned barrel table, shelving & sheepskin trim",
+  "Wire warm ambient lighting & hang the Ye Old Gaming Tavern sign"
+ ]}
+];
 var RW=[
  [25,"&#127962;","Tavern build improvement (lighting, trim or decor)"],
  [50,"&#127869;","Dinner date with Georgie"],
@@ -139,7 +177,7 @@ var STOPS=[],LS=[],LE=[],CUM=[];LEGS.forEach(function(g){LS.push(STOPS.length);g
 LAP=0;STOPS.forEach(function(s){CUM.push(LAP);LAP+=s.d});
 function flag(c){return String.fromCodePoint(127462+c.charCodeAt(0)-65,127462+c.charCodeAt(1)-65)}
 function where(k){var i=0;while(i<STOPS.length-1&&CUM[i+1]<=k)i++;return i}
-var TT=["Cold Start","Spark","First Gear","Momentum","Self-Starter","Full Throttle","Unstoppable","Trailblazer","Pathfinder","Engine of Adventure"],RO=["I","II","III","IV","V","VI","VII","VIII","IX","X"],LV=LAP/100;
+var TT=["Homebound","Daytripper","Wayfarer","Wanderer","Voyager","Navigator","Explorer","Globetrotter","Circumnavigator","World Walker"],RO=["I","II","III","IV","V","VI","VII","VIII","IX","X"],LV=LAP/100;
 function lvOf(k){return Math.min(100,1+Math.floor(k/LV))}
 function lname(n){return TT[Math.floor((n-1)/10)]+" "+RO[(n-1)%10]}
 function lprog(k){return lvOf(k)>=100?1:(k%LV)/LV}
@@ -147,7 +185,7 @@ var SK=HOB,TH=[2,5,10,20,35,55,80,115,155,200].map(function(h){return h*60}),RN=
 function rk(id){var x=S.xp[id]||0,n=0;TH.forEach(function(t){if(x>=t)n++});return n}
 function hm(x){return Math.floor(x/60)+"h "+x%60+"m"}
 function nf(x){return Math.round(x).toLocaleString("en-GB")}
-function addKm(n){var o=S.km,b=lvOf(o),m="";S.km=Math.max(0,o+n);S.tkm=Math.max(0,S.tkm+n);if(n>0){STOPS.forEach(function(q,j){if(j>0&&CUM[j]>o&&CUM[j]<=S.km)m="Arrived in "+q.n+"! "+flag(q.c)});var a=lvOf(S.km);if(a>b)m=(m?m+" ":"")+"Level up! Ignition Level "+a+": "+lname(a)+".";if(m)up=m}}
+function addKm(n){var o=S.km,b=lvOf(o),m="";S.km=Math.max(0,o+n);S.tkm=Math.max(0,S.tkm+n);if(n>0){STOPS.forEach(function(q,j){if(j>0&&CUM[j]>o&&CUM[j]<=S.km)m="Arrived in "+q.n+"! "+flag(q.c)});var a=lvOf(S.km);if(a>b)m=(m?m+" ":"")+"Rank up! Travel Rank "+a+": "+lname(a)+".";if(m)up=m}}
 function hob(id,m){var o=S.xp[id]||0,b=rk(id),w=Math.max(0,o+m);S.xp[id]=w;var d=Math.floor(w/60)-Math.floor(o/60);S.mks=Math.max(0,S.mks+d);if(d>0)fx=1;var a=rk(id);if(a>b)up=HOB.filter(function(s){return s.id===id})[0].n+" reached "+RN[a-1]+"!";return d}
 function burst(){if(window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches)return;var r=$("cm").getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2;for(var i=0;i<18;i++){var s=document.createElement("i"),a=Math.random()*6.28,d=60+Math.random()*90;s.className="spk";s.style.cssText="left:"+x+"px;top:"+y+"px;--dx:"+Math.cos(a)*d+"px;--dy:"+Math.sin(a)*d+"px;background:"+["#f2b84b","#a58cff","#5fd08c","#fff"][i%4];document.body.appendChild(s);setTimeout(function(e){e.remove()}.bind(null,s),900)}}
 function say(m){var t=$("toast");t.textContent=m;t.hidden=false;clearTimeout(say.t);say.t=setTimeout(function(){t.hidden=true},3200)}
@@ -190,7 +228,7 @@ function vToday(){var L=DL(S.tier),core=L.filter(function(d){return S.done[d.id]
  h+='<h2>Rest</h2><p class="sub">Always free. Never earned.</p><div class="list">'+card({e:"&#128715;",c:"#3a8f9a",n:"Rest and Decompression",d:"Blanket, comfort show, rooibos or Vimto. Release from self-criticism.",r:btn("rest","r","Take it","Free")})+'</div>';return h}
 function vJourney(){var i=where(S.km),a=STOPS[i],b=STOPS[i+1],fr=b&&a.d?Math.min(1,(S.km-CUM[i])/a.d):1,x=22+fr*276,cl=0,h,wCount=Object.keys(S.wishlist).length;
  LS.forEach(function(s,l){if(i>=s&&i<=LE[l])cl=l});
- h='<h2>The Eastbound Loop</h2><p class="sub">Seven legs across the globe, one capital at a time. Star stops to build your travel wishlist.</p><div class="panel"><div class="globe-wrap">'+globeSvg(S.km/LAP*100)+'<div><div class="big">'+nf(S.km)+' km</div><p class="sub" style="margin:4px 0 0">'+(S.km/LAP*100).toFixed(1)+'% of '+nf(LAP)+' km<br>Leg '+(cl+1)+' of 7 · Level '+lvOf(S.km)+'<br>&#9733; '+wCount+' on wishlist</p></div></div><div class="trk"><div class="tf"><span class="fl">'+flag(a.c)+'</span><b>'+a.n+'</b></div>'+(b?'<div class="tf r"><b>'+b.n+'</b><span class="fl">'+flag(b.c)+'</span></div>':'')+'</div>';
+ h='<h2>The Eastbound Loop</h2><p class="sub">Seven legs across the globe, one capital at a time. Star stops to build your travel wishlist.</p><div class="panel"><div class="globe-wrap">'+globeSvg(S.km/LAP*100)+'<div><div class="big">'+nf(S.km)+' km</div><p class="sub" style="margin:4px 0 0">'+(S.km/LAP*100).toFixed(1)+'% of '+nf(LAP)+' km<br>Leg '+(cl+1)+' of 7 · Rank '+lvOf(S.km)+'<br>&#9733; '+wCount+' on wishlist</p></div></div><div class="trk"><div class="tf"><span class="fl">'+flag(a.c)+'</span><b>'+a.n+'</b></div>'+(b?'<div class="tf r"><b>'+b.n+'</b><span class="fl">'+flag(b.c)+'</span></div>':'')+'</div>';
  h+='<svg viewBox="0 0 320 52" class="rail" role="img" aria-label="Progress to the next stop"><line x1="22" y1="40" x2="298" y2="40" style="stroke:var(--line)" stroke-width="5" stroke-linecap="round"/><line x1="22" y1="40" x2="'+x+'" y2="40" style="stroke:var(--tier)" stroke-width="5" stroke-linecap="round"/><g transform="translate('+x+' 22) scale(.9)" style="color:var(--tier)"><circle cx="0" cy="-1" r="16" style="fill:var(--surf);stroke:var(--tier)" stroke-width="2.5"/><circle cx="1" cy="-10" r="3.2" fill="currentColor"/><path d="M1 -6 L-1 2 M-1 2 L-6 8 M-1 2 L4 6 L3 12 M1 -5 L-5 -1 L-8 -4 M1 -5 L6 -3 L9 1" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></g></svg>';
  h+=(b?'<p style="margin:0"><b>'+nf(CUM[i+1]-S.km)+' km</b> to '+b.n+' ('+nf(a.d)+' km stretch)</p>':'<p style="margin:0"><b>Journey complete.</b> You are home.</p>')+'</div>';
  LEGS.forEach(function(g,l){var d=0,j;for(j=LS[l];j<=LE[l];j++)d+=STOPS[j].d;var dn=Math.max(0,Math.min(d,S.km-CUM[LS[l]]));
@@ -209,11 +247,12 @@ function vHobbies(){var nx=RW.filter(function(r){return!S.claimed[r[0]]})[0],h='
     +(ok?'<div class="gp-box"><select class="gp-sel" id="gp-sel" data-a="gpick"><option value="">Choose an explored location for your treat...</option>'+opts+'</select>'+(c?'<span class="pay" style="--c:var(--mute)">Claimed: '+(S.grandPick||'Chosen')+'</span>':btn("claim",r[0],"Claim Grand Prize","",!S.grandPick))+'</div>':'<div class="gp-box"><small style="color:var(--mute)">Locked until '+r[0]+' Marks. Wishlisted &amp; explored stops will appear here.</small></div>')+'</div>';
   }
   return card({e:r[1],c:"#6a4cd6",n:r[2],d:"At "+r[0]+" Marks",r:c?'<span class="pay" style="--c:var(--mute)">Claimed</span>':btn("claim",r[0],ok?"Claim":"Locked","",!ok)})}).join("")+'</div>';return h}
-function vSkills(){return'<h2>Skill trees</h2><p class="sub">Ten ranks per skill. Early ranks come quickly, and 200 hours makes a Master. Learning outcomes will unlock along each path.</p>'+SK.map(function(a){var x=S.xp[a.id]||0,n=rk(a.id),nx=TH[n],pv=n?TH[n-1]:0,fr=nx?(x-pv)/(nx-pv):1,pp=n?Math.min(100,((n-1)+(nx?fr:1))/9*100):0;
- return'<div class="panel" style="--c:'+a.c+'"><div class="ph"><span class="em">'+a.e+'</span><span><b>'+a.n+'</b><small style="display:block;color:var(--mute);font-size:13px">'+(n?RN[n-1]:"Unranked")+' · '+hm(x)+' practised</small></span></div><div class="path" style="--p:'+pp+'%">'+RN.map(function(r,i){return'<i class="nd'+(i<n?" on":"")+(i===n?" nxt":"")+'">'+(i+1)+'</i>'}).join("")+'</div><small style="color:var(--mute)">'+(nx?"Next: "+RN[n]+" in "+hm(nx-x):"Mastery reached.")+'</small><div class="goal" style="margin-top:10px">Learning outcomes for this skill will appear here.</div></div>'}).join("")}
-function vCharter(){return'<h2>The Charter</h2><p class="sub">You are the Keeper of the Stronghold. Your daily upkeep carries you around the globe. Your hobbies build mastery.</p><details open><summary>Two tracks, no trading</summary><p>Tasks earn kilometres on the Eastbound Loop, a 2.5-year walk across every continent, one capital at a time. Hobbies earn Marks, one per hour. Neither is ever locked behind the other.</p></details><details><summary>Ignition Level</summary><p>Your level is your progress round the globe: 100 ranks, one per 1% of the whole route. It measures how often you start yourself.</p></details><details><summary>Law 1: Rest and hobbies are never earned</summary><p>They are always open. Chores move you forward, but they never buy your joy.</p></details><details><summary>Law 2: Action buys blueprints</summary><p>No planning, spreadsheets or gear research until one physical task is done.</p></details><details><summary>Law 3: The 8 PM curfew</summary><p>Work and tasks close. Protected time with Georgie.</p></details><div class="foot"><button class="btn" data-a="reset">Fresh day</button><button class="btn danger" data-a="wipe">Hard reset</button></div>'}
+function objFor(a,n){var idx=Math.min(a.obj.length-1,Math.floor(n/2.6));return a.obj[idx]}
+function vSkills(){return'<h2>Skill trees</h2><p class="sub">Ten ranks per skill. Early ranks come quickly, and 200 hours makes a Master.</p>'+SK.map(function(a){var x=S.xp[a.id]||0,n=rk(a.id),nx=TH[n],pv=n?TH[n-1]:0,fr=nx?(x-pv)/(nx-pv):1,pp=n?Math.min(100,((n-1)+(nx?fr:1))/9*100):0;
+ return'<div class="panel" style="--c:'+a.c+'"><div class="ph"><span class="em">'+a.e+'</span><span><b>'+a.n+'</b><small style="display:block;color:var(--mute);font-size:13px">'+(n?RN[n-1]:"Unranked")+' · '+hm(x)+' practised</small></span></div><div class="path" style="--p:'+pp+'%">'+RN.map(function(r,i){return'<i class="nd'+(i<n?" on":"")+(i===n?" nxt":"")+'">'+(i+1)+'</i>'}).join("")+'</div><small style="color:var(--mute)">'+(nx?"Next: "+RN[n]+" in "+hm(nx-x):"Mastery reached.")+'</small><div class="goal" style="margin-top:10px;--c:'+a.c+'"><b>Current Learning Objective</b>'+objFor(a,n)+'</div></div>'}).join("")}
+function vCharter(){return'<h2>The Charter</h2><p class="sub">You are the Keeper of the Stronghold. Your daily upkeep carries you around the globe. Your hobbies build mastery.</p><details open><summary>Two tracks, no trading</summary><p>Tasks earn kilometres on the Eastbound Loop, a 2.5-year walk across every continent, one capital at a time. Hobbies earn Marks, one per hour. Neither is ever locked behind the other.</p></details><details><summary>Travel Ranks</summary><p>Your rank tracks your progress round the globe: 100 ranks from Homebound I to World Walker X, one per 1% of the whole route.</p></details><details><summary>Law 1: Rest and hobbies are never earned</summary><p>They are always open. Chores move you forward, but they never buy your joy.</p></details><details><summary>Law 2: Action buys blueprints</summary><p>No planning, spreadsheets or gear research until one physical task is done.</p></details><details><summary>Law 3: The 8 PM curfew</summary><p>Work and tasks close. Protected time with Georgie.</p></details><div class="foot"><button class="btn" data-a="reset">Fresh day</button><button class="btn danger" data-a="wipe">Hard reset</button></div>'}
 function render(){var t=tierDef();document.documentElement.style.setProperty("--tier","var("+t.c+")");
- var lv=lvOf(S.km);$("lvl").textContent="Ignition Level "+lv+" \u00b7 "+lname(lv);$("xpf").style.width=lprog(S.km)*100+"%";
+ var lv=lvOf(S.km);$("lvl").textContent="Travel Rank "+lv+" \u00b7 "+lname(lv);$("xpf").style.width=lprog(S.km)*100+"%";
  $("mks").textContent=S.mks;$("kmv").textContent=nf(S.km)+" km";
  [["cm",S.mks],["ck",Math.round(S.km)]].forEach(function(q){if(prev[q[0]]!==undefined&&prev[q[0]]!==q[1]){var c=$(q[0]);c.classList.remove("bump");void c.offsetWidth;c.classList.add("bump")}prev[q[0]]=q[1]});
  var body={today:vToday,journey:vJourney,hobbies:vHobbies,skills:vSkills,charter:vCharter}[V]();
