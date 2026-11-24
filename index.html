@@ -131,6 +131,39 @@ summary{cursor:pointer;font-weight:800}details p{margin:8px 0 0;color:var(--mute
 .rep-stat b{display:block;font:700 20px var(--head)}
 .rep-stat small{color:var(--mute);font-size:12px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* Sky-following-clock HUD */
+.hud.sky-dawn{background:linear-gradient(135deg,color-mix(in srgb,#f59e6c 26%,var(--bg)),color-mix(in srgb,#7b68ee 18%,var(--bg)))}
+.hud.sky-day{background:linear-gradient(135deg,color-mix(in srgb,#5bb5f0 20%,var(--bg)),color-mix(in srgb,var(--bg) 92%,transparent))}
+.hud.sky-dusk{background:linear-gradient(135deg,color-mix(in srgb,#e06c75 24%,var(--bg)),color-mix(in srgb,#6a4cd6 22%,var(--bg)))}
+.hud.sky-night{background:linear-gradient(135deg,color-mix(in srgb,#1a2248 45%,var(--bg)),color-mix(in srgb,#0e1124 65%,var(--bg)))}
+
+/* Motion safeguard */
+:root[data-motion="off"] *, :root[data-motion="off"] *::before, :root[data-motion="off"] *::after{transition:none!important;animation:none!important}
+:root[data-motion="calm"] .spk{display:none!important}
+
+/* Boarding-pass Today */
+.ticket{position:relative;display:grid;grid-template-columns:46px 1fr 84px;gap:12px;align-items:center;width:100%;text-align:left;background:var(--surf);border:1px solid var(--line);border-radius:18px;padding:12px 14px;min-height:74px;box-shadow:0 2px 6px rgba(20,24,60,.06);overflow:hidden;user-select:none;-webkit-user-select:none;touch-action:pan-y}
+.ticket .stub{border-left:2px dashed var(--line);padding-left:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:48px;position:relative;transition:transform .3s,opacity .3s}
+.ticket.done{background:color-mix(in srgb,var(--tier) 12%,var(--surf));border-color:var(--tier)}
+.ticket.done .em{background:var(--tier);color:#fff}
+.ticket.done .stub{border-left-color:var(--tier);transform:translateX(4px) rotate(3deg);opacity:.85}
+.hold-ring{position:absolute;inset:0;pointer-events:none;border-radius:18px;border:3px solid var(--tier);opacity:0;transform:scale(.98);transition:opacity .12s}
+.ticket.holding .hold-ring{opacity:1;animation:holdfill .5s linear forwards}
+@keyframes holdfill{0%{box-shadow:inset 0 0 0 0 color-mix(in srgb,var(--tier) 25%,transparent)}100%{box-shadow:inset 0 0 0 40px color-mix(in srgb,var(--tier) 22%,transparent)}}
+
+/* Fullscreen Postcard, Landing, Layover & Leg Complete */
+.fs-overlay{position:fixed;inset:0;z-index:40;display:grid;place-items:center;padding:20px;background:rgba(10,12,30,.72);backdrop-filter:blur(8px)}
+.fs-overlay[hidden]{display:none}
+.postcard{max-width:440px;width:100%;background:var(--surf);border:2px solid var(--gold);border-radius:22px;padding:22px;box-shadow:0 16px 48px rgba(0,0,0,.35);position:relative;overflow:hidden}
+.stamp-mark{display:inline-block;border:3px solid var(--red);color:var(--red);font:700 13px var(--head);padding:4px 10px;border-radius:8px;transform:rotate(-8deg);letter-spacing:.08em;text-transform:uppercase;animation:stampIn .35s cubic-bezier(.2,1.4,.4,1)}
+@keyframes stampIn{0%{transform:scale(2.1) rotate(-18deg);opacity:0}100%{transform:scale(1) rotate(-8deg);opacity:1}}
+.layover-box{max-width:420px;width:100%;text-align:center;background:var(--surf);border:2px solid var(--c,var(--tier));border-radius:24px;padding:28px 22px}
+.breathe{width:110px;height:110px;margin:16px auto;border-radius:50%;background:color-mix(in srgb,var(--c,var(--tier)) 20%,var(--surf));border:3px solid var(--c,var(--tier));display:grid;place-items:center;font:700 22px var(--head);animation:breathe 6s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.flight-log{background:var(--surf);border:1.5px solid var(--line);border-radius:18px;padding:14px;margin-bottom:12px;position:relative}
+.flight-log-head{display:flex;justify-content:space-between;align-items:center;border-bottom:2px dashed var(--line);padding-bottom:8px;margin-bottom:10px;font:700 13px var(--head)}
+
 </style>
 </head>
 <body>
@@ -138,19 +171,24 @@ summary{cursor:pointer;font-weight:800}details p{margin:8px 0 0;color:var(--mute
 <main id="app"></main>
 <nav class="nav" id="nav"></nav>
 <div class="toast" id="toast" hidden role="status"></div>
+<div class="fs-overlay" id="fso" hidden><div id="fsob" style="width:100%;display:grid;place-items:center"></div></div>
 <div class="modal" id="modal" hidden><div class="dlg" role="dialog" aria-modal="true"><div id="mb"></div></div></div>
 <script>
 (function(){
 var KEY="stronghold-v1",LAP=0,$=function(i){return document.getElementById(i)};
 function pad(n){return String(n).padStart(2,"0")}
+function esc(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
 function fmtKey(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
 function parseKey(s){var p=s.split("-").map(Number);return new Date(p[0],p[1]-1,p[2])}
 function today(){return fmtKey(new Date())}
 function wk(){return[0,6].indexOf(new Date().getDay())>-1}
-function fresh(){return{day:today(),tier:"green",convoy:false,done:{},tkm:0,mks:0,km:0,bonus:0,hlog:[],xp:{},claimed:{},wishlist:{},stopNotes:{},grandPick:"",off:wk(),muted:false,hist:{},customDuties:{},fieldMood:""}}
+function fresh(){return{day:today(),tier:"green",convoy:false,done:{},tkm:0,mks:0,km:0,bonus:0,hlog:[],xp:{},claimed:{},wishlist:{},stopNotes:{},grandPick:"",off:wk(),muted:false,hist:{},customDuties:{},fieldMood:"",motion:"full",sounds:{thud:true,chime:true,rustle:true},postcards:{},legsDone:{},globeRot:0}}
 var S=fresh(),V="today",prev={},fx=0,up="",celeb="",repMode="week",calDate=new Date(),selDay=today(),wishOnly=false,lastFocus=null;
 try{var p=JSON.parse(localStorage.getItem(KEY)||"null");if(p)for(var k in p)S[k]=p[k]}catch(e){}
-["done","xp","claimed","wishlist","stopNotes","hist","customDuties"].forEach(function(k){if(!S[k])S[k]={}});
+["done","xp","claimed","wishlist","stopNotes","hist","customDuties","postcards","legsDone"].forEach(function(k){if(!S[k])S[k]={}});
+if(!S.motion)S.motion="full";
+if(!S.sounds)S.sounds={thud:true,chime:true,rustle:true};
+if(typeof S.globeRot!=="number")S.globeRot=0;
 if(!S.hlog||!S.hlog.push)S.hlog=[];S.km=S.km||0;S.tkm=S.tkm||0;S.bonus=S.bonus||0;S.mks=S.mks||0;S.grandPick=S.grandPick||"";S.muted=!!S.muted;
 
 function syncHist(){
@@ -163,6 +201,9 @@ function save(){syncHist();try{localStorage.setItem(KEY,JSON.stringify(S))}catch
 var AC=null;
 function beep(type){
  if(S.muted)return;
+ if((type==="thud"||type==="knock")&&S.sounds&&!S.sounds.thud)return;
+ if((type==="chime"||type==="mark"||type==="bell")&&S.sounds&&!S.sounds.chime)return;
+ if(type==="rustle"&&S.sounds&&!S.sounds.rustle)return;
  try{
   if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();
   if(AC.state==="suspended")AC.resume();
@@ -171,6 +212,9 @@ function beep(type){
   if(type==="knock"){o.type="triangle";o.frequency.setValueAtTime(190,now);o.frequency.exponentialRampToValueAtTime(75,now+0.08);g.gain.setValueAtTime(0.18,now);g.gain.exponentialRampToValueAtTime(0.001,now+0.09);o.start(now);o.stop(now+0.1)}
   else if(type==="mark"){o.type="sine";o.frequency.setValueAtTime(523.25,now);o.frequency.setValueAtTime(659.25,now+0.08);o.frequency.setValueAtTime(783.99,now+0.16);g.gain.setValueAtTime(0.12,now);g.gain.exponentialRampToValueAtTime(0.001,now+0.35);o.start(now);o.stop(now+0.36)}
   else if(type==="bell"){o.type="sine";o.frequency.setValueAtTime(329.63,now);g.gain.setValueAtTime(0.14,now);g.gain.exponentialRampToValueAtTime(0.001,now+0.7);o.start(now);o.stop(now+0.72)}
+  else if(type==="thud"){o.type="sine";o.frequency.setValueAtTime(140,now);o.frequency.exponentialRampToValueAtTime(48,now+0.12);g.gain.setValueAtTime(0.24,now);g.gain.exponentialRampToValueAtTime(0.001,now+0.13);o.start(now);o.stop(now+0.14)}
+  else if(type==="chime"){o.type="sine";o.frequency.setValueAtTime(587.33,now);o.frequency.setValueAtTime(880,now+0.12);g.gain.setValueAtTime(0.11,now);g.gain.exponentialRampToValueAtTime(0.001,now+0.45);o.start(now);o.stop(now+0.46)}
+  else if(type==="rustle"){o.type="triangle";o.frequency.setValueAtTime(320,now);o.frequency.exponentialRampToValueAtTime(180,now+0.07);g.gain.setValueAtTime(0.06,now);g.gain.exponentialRampToValueAtTime(0.001,now+0.08);o.start(now);o.stop(now+0.09)}
  }catch(e){}
 }
 
@@ -243,21 +287,42 @@ var SK=HOB,TH=[2,5,10,20,35,55,80,115,155,200].map(function(h){return h*60}),RN=
 function rk(id){var x=S.xp[id]||0,n=0;TH.forEach(function(t){if(x>=t)n++});return n}
 function hm(x){return Math.floor(x/60)+"h "+x%60+"m"}
 function nf(x){return Math.round(x).toLocaleString("en-GB")}
-function addKm(n){var o=S.km,b=lvOf(o),m="";S.km=Math.max(0,o+n);S.tkm=Math.max(0,S.tkm+n);if(n>0){STOPS.forEach(function(q,j){if(j>0&&CUM[j]>o&&CUM[j]<=S.km){m="Arrived in "+q.n+"! "+flag(q.c);celeb="Arrived in "+flag(q.c)+" "+q.n+"!"+(S.wishlist[j]?" (Wishlist Stop!)":"")}});var a=lvOf(S.km);if(a>b){m=(m?m+" ":"")+"Rank up! Travel Rank "+a+": "+lname(a)+".";celeb="Travel Rank "+a+": "+lname(a)+"!"}if(m)up=m}}
+function addKm(n){
+ var o=S.km,b=lvOf(o),m="",arrivedIdx=-1,legDoneIdx=-1;
+ S.km=Math.max(0,o+n);S.tkm=Math.max(0,S.tkm+n);
+ if(n>0){
+  STOPS.forEach(function(q,j){
+   if(j>0&&CUM[j]>o&&CUM[j]<=S.km){
+    m="Arrived in "+q.n+"! "+flag(q.c);
+    celeb="Arrived in "+flag(q.c)+" "+q.n+"!"+(S.wishlist[j]?" (Wishlist Stop!)":"");
+    arrivedIdx=j;
+    if(!S.postcards[j])S.postcards[j]={date:today(),km:Math.round(S.km),note:S.stopNotes[j]||""};
+   }
+  });
+  LE.forEach(function(endIdx,l){
+   if(!S.legsDone[l]&&S.km>=CUM[endIdx]){S.legsDone[l]=today();legDoneIdx=l;}
+  });
+  var a=lvOf(S.km);
+  if(a>b){m=(m?m+" ":"")+"Rank up! Travel Rank "+a+": "+lname(a)+".";celeb="Travel Rank "+a+": "+lname(a)+"!"}
+  if(m)up=m;
+  if(arrivedIdx>-1)setTimeout(function(){openPostcard(arrivedIdx)},180);
+  else if(legDoneIdx>-1)setTimeout(function(){openLegComplete(legDoneIdx)},180);
+ }
+}
 function hob(id,m){var o=S.xp[id]||0,b=rk(id),w=Math.max(0,o+m);S.xp[id]=w;var d=Math.floor(w/60)-Math.floor(o/60);S.mks=Math.max(0,S.mks+d);if(d>0){fx=1;beep("mark")}else if(m>0)beep("knock");var a=rk(id);if(a>b){up=HOB.filter(function(s){return s.id===id})[0].n+" reached "+RN[a-1]+"!";celeb=up}return d}
 function burst(){if(window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches)return;var r=$("cm").getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2;for(var i=0;i<18;i++){var s=document.createElement("i"),a=Math.random()*6.28,d=60+Math.random()*90;s.className="spk";s.style.cssText="left:"+x+"px;top:"+y+"px;--dx:"+Math.cos(a)*d+"px;--dy:"+Math.sin(a)*d+"px;background:"+["#f2b84b","#a58cff","#5fd08c","#fff"][i%4];document.body.appendChild(s);setTimeout(function(e){e.remove()}.bind(null,s),900)}}
 function say(m){var t=$("toast");t.textContent=m;t.hidden=false;clearTimeout(say.t);say.t=setTimeout(function(){t.hidden=true},3200)}
 function tierDef(){return TIERS.filter(function(t){return t.id===S.tier})[0]}
 function nextLm(){var i=where(S.km);if(i>=STOPS.length-1)return null;return[flag(STOPS[i+1].c)+" "+STOPS[i+1].n,CUM[i+1]]}
 function globeSvg(pct){
- var ang=-90+pct*3.6,rad=ang*Math.PI/180,px=56+Math.cos(rad)*42,py=56+Math.sin(rad)*42;
+ var ang=-90+pct*3.6+(S.globeRot||0),rad=ang*Math.PI/180,px=56+Math.cos(rad)*42,py=56+Math.sin(rad)*42,rot=S.globeRot||0;
  return'<svg viewBox="0 0 112 112" class="globe" data-a="stopinfo" data-id="'+where(S.km)+'" role="img" aria-label="Eastbound Loop globe progress">'
   +'<defs><radialGradient id="ocean" cx="35%" cy="30%"><stop offset="0%" stop-color="#3a86c8"/><stop offset="100%" stop-color="#193b68"/></radialGradient><clipPath id="gc"><circle cx="56" cy="56" r="46"/></clipPath></defs>'
   +'<circle cx="56" cy="56" r="46" fill="url(#ocean)" stroke="var(--line)" stroke-width="2"/>'
   +'<g clip-path="url(#gc)" opacity=".35" stroke="#fff" stroke-width="1" fill="none">'
   +'<ellipse cx="56" cy="56" rx="22" ry="46"/><ellipse cx="56" cy="56" rx="38" ry="46"/><line x1="10" y1="56" x2="102" y2="56"/><line x1="16" y1="34" x2="96" y2="34"/><line x1="16" y1="78" x2="96" y2="78"/>'
   +'</g>'
-  +'<g clip-path="url(#gc)" fill="#5fd08c" opacity=".55">'
+  +'<g clip-path="url(#gc)" fill="#5fd08c" opacity=".55" transform="rotate('+rot.toFixed(1)+' 56 56)">'
   +'<path d="M22 30 Q34 22 44 30 Q48 42 36 48 Q24 44 22 30Z"/>'
   +'<path d="M48 26 Q72 18 88 32 Q94 48 76 54 Q58 50 48 26Z"/>'
   +'<path d="M46 54 Q60 52 64 68 Q56 84 44 76 Q40 64 46 54Z"/>'
@@ -294,10 +359,10 @@ function vToday(){var L=DL(S.tier),core=L.filter(function(d){return S.done[d.id]
  if(!S.convoy&&inConvoyWindow())h+='<div class="celeb" style="border-color:var(--tier)"><div><b>Convoy Window Active</b><small>Fri 1 PM – Sun 4 PM with Raife. Toggle Convoy mode?</small></div><button class="btn" data-a="convoy">Enable</button></div>';
  h+='<h2>Your energy today</h2><p class="sub">Pick the battery you have. The tasks change to match.</p><div class="tiers">'+TIERS.map(function(t){return'<button class="tier" data-a="tier" data-id="'+t.id+'" style="--c:var('+t.c+');--w:'+t.w+'" aria-pressed="'+(S.tier===t.id)+'"><i class="bar"></i><b>'+t.n+'</b><small>'+t.s+'</small></button>'}).join("")+'</div>';
  h+='<button class="convoy" data-a="off" aria-pressed="'+S.off+'"><span class="sw"></span><span><b>Day off</b><small style="display:block;color:var(--mute);font-size:13px">Swaps Work Blocks for Home Focus blocks. Same distance.</small></span></button><button class="convoy" data-a="convoy" aria-pressed="'+S.convoy+'"><span class="sw"></span><span><b>Northern Convoy weekend</b><small style="display:block;color:var(--mute);font-size:13px">Friday 1 PM to Sunday 4 PM with Raife. Tasks pause.</small></span></button>';
- if(!S.convoy){h+='<h2>Today’s tasks</h2><div class="meter"><i style="width:'+pct+'%"></i></div><p class="sub">'+(pct===100?(S.tier==="red"?"Minimums done. Everything else is waived.":"All done. You are off the clock."):core+" of "+L.length+" tasks done. Each one carries you further round the globe.")+'</p><div class="list">'+L.map(function(d){var on=S.done[d.id];return'<button class="card'+(on?' done':'')+'" data-a="duty" data-id="'+d.id+'" aria-pressed="'+(!!on)+'"><span class="em">'+(on?"&#10003;":d.e)+'</span><span><b>'+d.n+'</b><small>'+d.d+' About '+d.m+' min.</small></span><span class="pay">+'+K(d.m)+'<small>km</small></span></button>'}).join("")+'</div>';
+ if(!S.convoy){h+='<h2>Today’s tasks</h2><div class="meter"><i style="width:'+pct+'%"></i></div><p class="sub">'+(pct===100?(S.tier==="red"?"Minimums done. Everything else is waived.":"All done. You are off the clock."):core+" of "+L.length+" tasks done. Each one carries you further round the globe.")+'</p><div class="list">'+L.map(function(d){var on=S.done[d.id];return'<button class="ticket'+(on?' done':'')+'" data-a="duty" data-hold="1" data-id="'+d.id+'" aria-pressed="'+(!!on)+'"><span class="hold-ring"></span><span class="em">'+(on?"&#10003;":d.e)+'</span><span><b>'+esc(d.n)+'</b><small>'+d.d+' ~'+d.m+'m</small></span><span class="stub"><span class="pay" style="border:0;background:none;padding:0;min-height:0">+'+K(d.m)+'<small>km</small></span><small style="font-size:10px;color:var(--mute)">'+(on?'STAMPED':'HOLD')+'</small></span></button>'}).join("")+'</div>';
   if(S.tier==="green"){var ok=S.done.led1&&S.done.led2,full=L.every(function(d){return S.done[d.id]});h+='<h2>Bonus task</h2><p class="sub">'+(full?"You are off the clock, so this is purely optional.":"Unlocks once both "+(S.off?"Home Focus blocks":"Work Blocks")+" are done.")+'</p><div class="list"><button class="card" data-a="bonus"'+(ok&&S.bonus<5?"":" disabled")+'><span class="em">+</span><span><b>Bonus '+(S.off?"Home Focus":"Work Block")+'</b><small>Extra 45-minute block. '+S.bonus+' of 5 today.</small></span><span class="pay">+'+K(45)+'<small>km</small></span></button>'+(S.bonus?'<button class="link" data-a="unbonus">Undo last bonus block</button>':'')+'</div>'}}
  h+='<h2>Field check &amp; Rest</h2><p class="sub">Optional prompt roll or a free rest.</p><div class="list">'
-  +card({e:"&#127922;",c:"#7b5ea7",n:"Hobby Dice Roll",d:S.fieldMood||"Stuck choosing? Roll for a quick hobby prompt.",r:btn("dice","d","Roll","Prompt")})
+  +card({e:"&#127922;",c:"#7b5ea7",n:"Hobby Dice Roll",d:S.fieldMood?esc(S.fieldMood):"Stuck choosing? Roll for a quick hobby prompt.",r:btn("dice","d","Roll","Prompt")+(S.fieldMood?'<button class="link" data-a="clrdice">Clear</button>':'')})
   +card({e:"&#128715;",c:"#3a8f9a",n:"Rest and Decompression",d:"Blanket, comfort show, rooibos or Vimto. Release from self-criticism.",r:btn("rest","r","Take it","Free")})
   +'</div>';return h}
 
@@ -305,7 +370,7 @@ function vJourney(){var i=where(S.km),a=STOPS[i],b=STOPS[i+1],fr=b&&a.d?Math.min
  LS.forEach(function(s,l){if(i>=s&&i<=LE[l])cl=l});
  h='<h2>The Eastbound Loop</h2><p class="sub">Tap the globe or any stop to inspect it, add travel notes, or star your wishlist.</p><div class="panel"><div class="globe-wrap">'+globeSvg(S.km/LAP*100)+'<div><div class="big">'+nf(S.km)+' km</div><p class="sub" style="margin:4px 0 0">'+(S.km/LAP*100).toFixed(1)+'% of '+nf(LAP)+' km<br>Leg '+(cl+1)+' of 7 · Rank '+lvOf(S.km)+'<br>&#9733; '+wCount+' on wishlist</p></div></div><div class="trk"><div class="tf"><span class="fl">'+flag(a.c)+'</span><b>'+a.n+'</b></div>'+(b?'<div class="tf r"><b>'+b.n+'</b><span class="fl">'+flag(b.c)+'</span></div>':'')+'</div>';
  h+='<svg viewBox="0 0 320 52" class="rail" role="img" aria-label="Progress to the next stop"><line x1="22" y1="40" x2="298" y2="40" style="stroke:var(--line)" stroke-width="5" stroke-linecap="round"/><line x1="22" y1="40" x2="'+x+'" y2="40" style="stroke:var(--tier)" stroke-width="5" stroke-linecap="round"/><g transform="translate('+x+' 22) scale(.9)" style="color:var(--tier)"><circle cx="0" cy="-1" r="16" style="fill:var(--surf);stroke:var(--tier)" stroke-width="2.5"/><circle cx="1" cy="-10" r="3.2" fill="currentColor"/><path d="M1 -6 L-1 2 M-1 2 L-6 8 M-1 2 L4 6 L3 12 M1 -5 L-5 -1 L-8 -4 M1 -5 L6 -3 L9 1" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></g></svg>';
- h+=(b?'<p style="margin:0"><b>'+nf(CUM[i+1]-S.km)+' km</b> to '+b.n+' ('+nf(a.d)+' km stretch)</p>':'<p style="margin:0"><b>Journey complete.</b> You are home.</p>')+'<div style="margin-top:10px"><button class="btn" data-a="jumpcur">Jump to Current Stop ('+a.n+')</button></div></div>';
+ h+=(b?'<p style="margin:0"><b>'+nf(CUM[i+1]-S.km)+' km</b> to '+b.n+' ('+nf(a.d)+' km stretch)</p>':'<p style="margin:0"><b>Journey complete.</b> You are home.</p>')+'<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-a="jumpcur">Jump to Current Stop ('+a.n+')</button><button class="btn" data-a="stampbook">Stamp Book ('+Object.keys(S.postcards).length+')</button></div></div>';
  LEGS.forEach(function(g,l){var d=0,j;for(j=LS[l];j<=LE[l];j++)d+=STOPS[j].d;var dn=Math.max(0,Math.min(d,S.km-CUM[LS[l]]));
   h+='<details id="leg-'+l+'"'+(l===cl?' open':'')+'><summary>'+g[0]+'<small style="display:block;color:var(--mute);font-weight:600">'+nf(dn)+' of '+nf(d)+' km · '+(LE[l]-LS[l]+1)+' stops</small></summary><div class="mini" style="--c:var(--tier);margin-bottom:6px"><i style="width:'+(d?dn/d*100:0)+'%"></i></div>';
   for(j=LS[l];j<=LE[l];j++){var s=STOPS[j],nx=STOPS[j+1],ws=!!S.wishlist[j],nt=S.stopNotes[j];h+='<div id="stop-'+j+'" class="lm'+(j<i?' on':'')+(j===i?' cur':'')+'"><span class="lm-main" data-a="stopinfo" data-id="'+j+'"><b>'+(j<i?'&#10003; ':'')+flag(s.c)+' '+s.n+(nt?' &#128221;':'')+'</b>'+(s.p?' <small style="display:inline">pit stop</small>':'')+(nx?'<small>to '+nx.n+'</small>':'<small>Finish</small>')+'</span><span class="lm-r"><span class="lm-d">'+(nx?nf(s.d)+' km':'Home')+'</span><button class="wish-btn" data-a="wish" data-id="'+j+'" aria-pressed="'+ws+'" title="Toggle wishlist">'+(ws?'&#9733;':'&#9734;')+'</button></span></div>'}
@@ -316,8 +381,8 @@ function exploredList(){var i=where(S.km),out=[],j;for(j=0;j<=i;j++){if(wishOnly
 function vHobbies(){var nx=RW.filter(function(r){return!S.claimed[r[0]]})[0],h='<h2>Hobby hub</h2><p class="sub">Every 60 minutes earns a Mark, and Marks are never spent. Log quick blocks or custom minutes with a session note.</p>';
  if(nx)h+='<div class="panel" style="--c:var(--gem)"><b>Next reward: '+nx[2]+'</b><div class="mini"><i style="width:'+Math.min(100,S.mks/nx[0]*100)+'%"></i></div><small style="color:var(--mute)">'+(S.mks>=nx[0]?"Ready to claim in the chest below.":(nx[0]-S.mks)+" Marks to go ("+S.mks+" of "+nx[0]+")")+'</small></div>';
  h+='<div class="list">'+HOB.map(function(a){var x=S.xp[a.id]||0,logs=S.hlog.filter(function(l){return l.id===a.id}),t=logs.reduce(function(s,l){return s+l.m},0);
-  var jhtml=logs.filter(function(l){return l.n}).map(function(l){return'<div><span>&#128221; '+l.n+'</span><span>'+l.m+'m</span></div>'}).join("");
-  return'<div class="card hc" style="--c:'+a.c+'"><span class="em">'+a.e+'</span><span><b>'+a.n+'</b><small>'+a.d+'</small><small class="got">'+(t?t+" min today. ":"")+(60-x%60)+' min to the next Mark</small><div class="mini"><i style="width:'+(x%60)/60*100+'%"></i></div></span><div class="acts2"><button class="btn" data-a="hlog" data-id="'+a.id+'" data-m="30">+30 min</button><button class="btn" data-a="hlog" data-id="'+a.id+'" data-m="60">+60 min</button>'+(t?'<button class="link" data-a="hundo" data-id="'+a.id+'">Undo</button>':'')+'<div class="cust-row"><input type="number" min="5" max="300" value="20" id="cm-'+a.id+'" aria-label="Custom minutes"><input type="text" placeholder="Session note (patch, route, fold...)" id="cn-'+a.id+'"><button class="btn" data-a="hcust" data-id="'+a.id+'">Log</button></div>'+(jhtml?'<div class="jlog" style="width:100%">'+jhtml+'</div>':'')+'</div></div>'}).join("")+'</div>';
+  var jhtml=logs.filter(function(l){return l.n}).map(function(l){return'<div><span>&#128221; '+esc(l.n)+'</span><span>'+l.m+'m</span></div>'}).join("");
+  return'<div class="card hc" style="--c:'+a.c+'"><span class="em">'+a.e+'</span><span><b>'+a.n+'</b><small>'+a.d+'</small><small class="got">'+(t?t+" min today. ":"")+(60-x%60)+' min to the next Mark</small><div class="mini"><i style="width:'+(x%60)/60*100+'%"></i></div></span><div class="acts2"><button class="btn" data-a="hlog" data-id="'+a.id+'" data-m="30">+30 min</button><button class="btn" data-a="hlog" data-id="'+a.id+'" data-m="60">+60 min</button><button class="btn" data-a="layover" data-id="'+a.id+'">Layover</button>'+(t?'<button class="link" data-a="hundo" data-id="'+a.id+'">Undo</button>':'')+'<div class="cust-row"><input type="number" min="5" max="300" value="20" id="cm-'+a.id+'" aria-label="Custom minutes"><input type="text" placeholder="Session note (patch, route, fold...)" id="cn-'+a.id+'"><button class="btn" data-a="hcust" data-id="'+a.id+'">Log</button></div>'+(jhtml?'<div class="jlog" style="width:100%">'+jhtml+'</div>':'')+'</div></div>'}).join("")+'</div>';
  h+='<h2>Reward chest</h2><p class="sub">Rewards unlock as your Marks grow. Claiming costs nothing, and high thresholds keep spending rare.</p><div class="list">'+RW.map(function(r){var c=S.claimed[r[0]],ok=S.mks>=r[0],isGrand=r[0]===750;
   if(isGrand){
    var ex=exploredList(),opts=ex.map(function(o){var lbl=flag(o.s.c)+' '+o.s.n+(o.w?' (Wishlist)':'');return'<option value="'+o.s.n+'"'+(S.grandPick===o.s.n?' selected':'')+'>'+lbl+'</option>'}).join("");
@@ -334,7 +399,7 @@ function mondayOf(d){var x=new Date(d.getFullYear(),d.getMonth(),d.getDate()),di
 function vReports(){
  var y=calDate.getFullYear(),m=calDate.getMonth(),first=new Date(y,m,1).getDay(),days=new Date(y,m+1,0).getDate(),offset=(first+6)%7;
  var mName=calDate.toLocaleString("en-GB",{month:"long",year:"numeric"});
- var cal='<div class="panel"><div class="cal-head"><button class="btn" data-a="calprev">&larr;</button><b>'+mName+'</b><button class="btn" data-a="calnext">&rarr;</button></div><div class="cal-grid">';
+ var cal='<div class="panel"><div class="cal-head"><button class="btn" data-a="calprev">&larr;</button><b>'+mName+'</b><div style="display:flex;gap:6px"><button class="btn" data-a="caltoday">Today</button><button class="btn" data-a="calnext">&rarr;</button></div></div><div class="cal-grid">';
  ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].forEach(function(d){cal+='<div class="cal-dow">'+d+'</div>'});
  for(var i=0;i<offset;i++)cal+='<div></div>';
  for(var d=1;d<=days;d++){
@@ -362,12 +427,12 @@ function vReports(){
  });
  var isW=repMode==="week",rKm=isW?wKm:mKm,rT=isW?wTasks:mTasks,rM=isW?wMin:mMin,rH=isW?wH:mH;
  var rep='<div class="seg"><button data-a="repmode" data-id="week" aria-pressed="'+isW+'">This Week (Mon–Sun)</button><button data-a="repmode" data-id="month" aria-pressed="'+!isW+'">'+calDate.toLocaleString("en-GB",{month:"short"})+' Report</button></div>'
-  +'<div class="rep-grid">'
+  +'<div class="flight-log"><div class="flight-log-head"><span>&#9992; '+(isW?'WEEKLY FLIGHT LOG':'MONTHLY FLIGHT LOG')+'</span><span>'+today()+'</span></div><div class="rep-grid" style="margin-bottom:0">'
   +'<div class="rep-stat"><b>'+nf(rKm)+' km</b><small>Distance walked</small></div>'
   +'<div class="rep-stat"><b>'+rT+'</b><small>Tasks completed</small></div>'
   +'<div class="rep-stat"><b>'+hm(rM)+'</b><small>Hobby time</small></div>'
   +'<div class="rep-stat"><b>'+Math.floor(rM/60)+'</b><small>Marks earned</small></div>'
-  +'</div>';
+  +'</div></div>';
  var hList=HOB.map(function(a){return rH[a.id]?'<div><span>'+a.e+' '+a.n+'</span><b>'+hm(rH[a.id])+'</b></div>':''}).join("");
  if(hList)rep+='<div class="panel"><b style="display:block;margin-bottom:6px">'+(isW?'Weekly':'Monthly')+' Hobby Breakdown</b><div class="jlog" style="border:0;padding:0;margin:0">'+hList+'</div></div>';
  return'<h2>Calendar &amp; Reports</h2><p class="sub">Active date: <b>'+today()+'</b>. Inspect any day or compare weekly and monthly totals.</p>'+cal+rep;
@@ -379,7 +444,56 @@ function vCharter(){return'<h2>The Charter</h2><p class="sub">You are the Keeper
  +'<details><summary>Law 2: Action buys blueprints</summary><p>No planning, spreadsheets or gear research until one physical task is done.</p></details>'
  +'<details><summary>Law 3: The 8 PM curfew</summary><p>Work and tasks close. Protected time with Georgie.</p></details>'
  +'<div class="foot"><button class="btn" data-a="tweaks">Customise Tasks</button><button class="btn" data-a="backup">Backup / Restore</button></div>'
- +'<div class="foot"><button class="btn" data-a="reset">Fresh day</button><button class="btn danger" data-a="wipe">Hard reset</button></div>'}
+ +'<div class="foot"><button class="btn" data-a="ics">Export Anchors (.ics)</button><button class="btn" data-a="reminders">Send to Reminders</button></div>'
+ +'<div class="panel" style="margin-top:12px"><b>Motion &amp; Safeguard</b><div class="seg" style="margin-top:8px;margin-bottom:0">'
+ +["full","calm","off"].map(function(m){return'<button data-a="motion" data-id="'+m+'" aria-pressed="'+(S.motion===m)+'">'+m.toUpperCase()+'</button>'}).join("")
+ +'</div></div>'
+ +'<div class="panel"><b>Soft Sounds</b><div class="foot" style="margin-top:8px">'
+ +'<button class="btn" data-a="snd" data-id="thud">Thud: '+(S.sounds.thud?'On':'Off')+'</button>'
+ +'<button class="btn" data-a="snd" data-id="chime">Chime: '+(S.sounds.chime?'On':'Off')+'</button>'
+ +'<button class="btn" data-a="snd" data-id="rustle">Rustle: '+(S.sounds.rustle?'On':'Off')+'</button>'
+ +'</div></div>'
+ +'<div class="foot"><button class="btn" data-a="landing">Safe Landing Screen</button><button class="btn" data-a="stampbook">Stamp Book</button></div>'
+ ++'<div class="foot"><button class="btn" data-a="reset">Fresh day</button><button class="btn danger" data-a="wipe">Hard reset</button></div>'}
+
+
+var layInt=null,laySec=0,layId="";
+function closeFso(){if(layInt){clearInterval(layInt);layInt=null}$("fso").hidden=true;document.body.style.overflow=""}
+function openPostcard(idx){
+ var st=STOPS[idx],pc=S.postcards[idx]||{date:today(),km:Math.round(S.km),note:S.stopNotes[idx]||""};
+ beep("chime");
+ $("fsob").innerHTML='<div class="postcard"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:36px">'+flag(st.c)+'</span><span class="stamp-mark">ARRIVED</span></div>'
+  +'<h3 style="font:700 22px var(--head);margin:10px 0 4px">'+st.n+'</h3>'
+  +'<p style="margin:0 0 12px;color:var(--mute);font-size:14px">'+pc.date+' · '+nf(pc.km)+' km</p>'
+  +'<input class="inp" id="pc-note" placeholder="One-line postcard note..." value="'+esc(pc.note)+'">'
+  +'<div class="foot" style="margin-top:12px"><button class="btn" data-a="savepc" data-id="'+idx+'">Save to Stamp Book</button><button class="btn" data-a="closefso">Close</button></div></div>';
+ $("fso").hidden=false;document.body.style.overflow="hidden";
+}
+function openLanding(){
+ var hmin=S.hlog.reduce(function(a,b){return a+b.m},0),doneC=Object.keys(S.done).length;
+ beep("chime");
+ $("fsob").innerHTML='<div class="postcard" style="border-color:var(--tier)"><div style="display:flex;justify-content:space-between;align-items:center"><b>&#9992; TOUCHDOWN</b><span class="stamp-mark" style="border-color:var(--green);color:var(--green)">SAFE LANDING</span></div>'
+  +'<h3 style="font:700 22px var(--head);margin:12px 0 6px">Evening Curfew</h3>'
+  +'<p style="margin:0 0 14px;color:var(--mute)">'+nf(S.tkm)+' km walked · '+doneC+' tasks · '+hm(hmin)+' hobbies</p>'
+  +'<button class="btn" style="width:100%" data-a="closefso">Rest for the Evening</button></div>';
+ $("fso").hidden=false;document.body.style.overflow="hidden";
+}
+function openLayover(id){
+ var h=HOB.filter(function(x){return x.id===id})[0];layId=id;laySec=0;
+ $("fsob").innerHTML='<div class="layover-box" style="--c:'+h.c+'"><small style="font-weight:800;color:'+h.c+'">LAYOVER FOCUS</small><h3 style="font:700 22px var(--head);margin:4px 0">'+h.e+' '+h.n+'</h3>'
+  +'<div class="breathe" id="lay-t">00:00</div>'
+  +'<p style="color:var(--mute);font-size:13px;margin:0 0 14px">Calm focus. Ending stamps your session.</p>'
+  +'<div class="foot"><button class="btn" data-a="endlay">End &amp; Stamp</button><button class="btn" data-a="closefso">Cancel</button></div></div>';
+ $("fso").hidden=false;document.body.style.overflow="hidden";
+ layInt=setInterval(function(){laySec++;var el=$("lay-t");if(el)el.textContent=pad(Math.floor(laySec/60))+":"+pad(laySec%60)},1000);
+}
+function openLegComplete(l){
+ beep("chime");
+ $("fsob").innerHTML='<div class="postcard" style="border-color:var(--gold)"><span class="stamp-mark">LEG COMPLETE</span><h3 style="font:700 20px var(--head);margin:10px 0 6px">'+LEGS[l][0]+'</h3>'
+  +'<svg viewBox="0 0 280 48" style="width:100%;margin:8px 0"><path d="M16 24 Q90 6 140 24 T264 24" fill="none" stroke="var(--gold)" stroke-width="4" stroke-dasharray="6 4"/><circle cx="16" cy="24" r="6" fill="var(--green)"/><circle cx="264" cy="24" r="6" fill="var(--gold)"/></svg>'
+  +'<button class="btn" style="width:100%" data-a="closefso">Continue Journey</button></div>';
+ $("fso").hidden=false;document.body.style.overflow="hidden";
+}
 
 function openModal(html,trigger){
  lastFocus=trigger||document.activeElement;
@@ -391,7 +505,11 @@ function closeModal(){
  if(lastFocus&&lastFocus.focus){lastFocus.focus();lastFocus=null}
 }
 
-function render(){var t=tierDef();document.documentElement.style.setProperty("--tier","var("+t.c+")");
+function render(){
+ var t=tierDef();document.documentElement.style.setProperty("--tier","var("+t.c+")");
+ document.documentElement.setAttribute("data-motion",S.motion||"full");
+ var hr=new Date().getHours(),sky=hr>=5&&hr<8?"sky-dawn":hr>=8&&hr<17?"sky-day":hr>=17&&hr<20?"sky-dusk":"sky-night";
+ var hud=document.querySelector(".hud");if(hud){hud.classList.remove("sky-dawn","sky-day","sky-dusk","sky-night");hud.classList.add(sky)}
  var lv=lvOf(S.km);$("lvl").textContent="Travel Rank "+lv+" \u00b7 "+lname(lv);$("xpf").style.width=lprog(S.km)*100+"%";
  $("mks").textContent=S.mks;$("kmv").textContent=nf(S.km)+" km";
  $("mbtn").innerHTML=S.muted?"&#128263;":"&#128266;";
@@ -419,7 +537,7 @@ function act(a,id,x,el){
   var st=STOPS[id],nt=S.stopNotes[id]||"";
   openModal('<h3>'+flag(st.c)+' '+st.n+'</h3><p>Distance from London: '+nf(CUM[id])+' km. '+(STOPS[+id+1]?'Next stretch: '+nf(st.d)+' km to '+STOPS[+id+1].n+'.':'Final stop!')+'</p>'
    +'<label style="display:block;font-size:13px;font-weight:800;margin-bottom:4px">Travel / Grand Prize Note</label>'
-   +'<textarea class="inp" id="st-note" rows="3" placeholder="e.g. Boutique hotel, local food, or treat idea...">'+nt+'</textarea>'
+   +'<textarea class="inp" id="st-note" rows="3" placeholder="e.g. Boutique hotel, local food, or treat idea...">'+esc(nt)+'</textarea>'
    +'<div class="row" style="margin-top:12px"><button class="btn" data-a="savestop" data-id="'+id+'">Save Note</button><button class="btn" data-a="cancel">Close</button></div>',el);
   return;
  }
@@ -429,12 +547,35 @@ function act(a,id,x,el){
  else if(a==="hcust"){var m=Math.max(5,Math.min(300,+$("cm-"+id).value||20)),n=$("cn-"+id).value.trim();S.hlog.push({id:id,m:m,n:n});var dm=hob(id,m);say(dm>0?"+"+dm+" Mark. "+m+"m logged.":m+"m logged.")}
  else if(a==="hundo"){for(var i=S.hlog.length-1;i>=0;i--)if(S.hlog[i].id===id){var u=S.hlog[i].m;S.hlog.splice(i,1);hob(id,-u);break}}
  else if(a==="claim"){S.claimed[id]=1;beep("mark");say("Reward claimed. Go and enjoy it.")}
+ else if(a==="clrdice"){S.fieldMood=""}
+ else if(a==="caltoday"){calDate=new Date();selDay=today()}
+ else if(a==="ics"){
+  var dstr=today().replace(/-/g,"");
+  var evs=[
+   ["Sailing Cutoff (Ashore)",dstr+"T140000",dstr+"T141500"],
+   ["Nova Patrol Cutoff",dstr+"T160000",dstr+"T161500"],
+   ["House Reset",dstr+"T163000",dstr+"T170000"],
+   ["Curfew: Protected Partner Time",dstr+"T200000",dstr+"T220000"]
+  ];
+  var ics="BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Stronghold Charter//EN\r\n"+evs.map(function(e,idx){
+   return "BEGIN:VEVENT\r\nUID:stronghold-"+dstr+"-"+idx+"@local\r\nDTSTAMP:"+dstr+"T080000\r\nDTSTART:"+e[1]+"\r\nDTEND:"+e[2]+"\r\nSUMMARY:"+e[0]+"\r\nEND:VEVENT"
+  }).join("\r\n")+"\r\nEND:VCALENDAR";
+  var b=new Blob([ics],{type:"text/calendar"}),u=URL.createObjectURL(b),el2=document.createElement("a");
+  el2.href=u;el2.download="stronghold-anchors-"+today()+".ics";el2.click();URL.revokeObjectURL(u);
+  say("Calendar .ics exported.");return;
+ }
+ else if(a==="reminders"){
+  var rem=DL(S.tier).filter(function(d){return !S.done[d.id]}).map(function(d){return d.n+" ("+d.m+"m)"}).join("\n");
+  if(!rem){say("All tasks for today are already done.");return}
+  window.location.href="shortcuts://run-shortcut?name=Stronghold%20Reminder&input=text&text="+encodeURIComponent(rem);
+  say("Opening Apple Shortcuts...");return;
+ }
  else if(a==="calprev"){calDate.setMonth(calDate.getMonth()-1)}
  else if(a==="calnext"){calDate.setMonth(calDate.getMonth()+1)}
  else if(a==="selday"){selDay=id}
  else if(a==="repmode"){repMode=id}
  else if(a==="tweaks"){
-  var rows=DL(S.tier).map(function(d){return'<div style="margin-bottom:8px"><small style="font-weight:800">'+d.n+'</small><div style="display:flex;gap:6px"><input class="inp" id="tn-'+d.id+'" value="'+d.n+'"><input class="inp" style="width:80px" type="number" id="tm-'+d.id+'" value="'+d.m+'"></div></div>'}).join("");
+  var rows=DL(S.tier).map(function(d){return'<div style="margin-bottom:8px"><small style="font-weight:800">'+esc(d.n)+'</small><div style="display:flex;gap:6px"><input class="inp" id="tn-'+d.id+'" value="'+esc(d.n)+'"><input class="inp" style="width:80px" type="number" id="tm-'+d.id+'" value="'+d.m+'"></div></div>'}).join("");
   openModal('<h3>Customise Tasks</h3><p>Rename tasks or adjust their minutes.</p>'+rows+'<div class="row"><button class="btn" data-a="savetweaks">Save</button><button class="btn" data-a="cancel">Cancel</button></div>',el);return;
  }
  else if(a==="savetweaks"){DL(S.tier).forEach(function(d){S.customDuties[d.id]={n:$("tn-"+d.id).value.trim()||d.n,m:Math.max(5,+$("tm-"+d.id).value||d.m)}});closeModal();say("Tasks updated.")}
@@ -447,11 +588,56 @@ function act(a,id,x,el){
  else if(a==="restore"){try{var obj=JSON.parse($("bk-txt").value);if(obj&&typeof obj.km==="number"){S=obj;closeModal();say("Backup restored!")}}catch(e){say("Invalid JSON backup.")}}
  else if(a==="reset"){S.done={};S.hlog=[];S.bonus=0;S.tkm=0}
  else if(a==="wipe"){openModal('<h3>Delete everything?</h3><p>This erases all Marks, kilometres, wishlist stops, skill progress and your Travel Rank. It cannot be undone.</p><div class="row"><button class="btn" data-a="cancel">Keep progress</button><button class="btn danger" data-a="hardreset">Delete everything</button></div>',el);return}
+ else if(a==="closefso"){closeFso();return}
+ else if(a==="savepc"){var nt=$("pc-note").value.trim();S.postcards[id]=S.postcards[id]||{date:today(),km:Math.round(S.km)};S.postcards[id].note=nt;S.stopNotes[id]=nt;closeFso();say("Postcard saved to Stamp Book.")}
+ else if(a==="stampbook"){
+  var ks=Object.keys(S.postcards);
+  var body=ks.length?ks.map(function(k){var p=S.postcards[k],s=STOPS[k];return'<div class="lm"><span><b>'+flag(s.c)+' '+s.n+'</b><small>'+p.date+' · '+nf(p.km)+' km'+(p.note?' — '+esc(p.note):'')+'</small></span></div>'}).join(""):'<p>No arrival postcards yet. Walk your first stretch to earn one!</p>';
+  openModal('<h3>Stamp Book ('+ks.length+')</h3>'+body+'<div class="row" style="margin-top:12px"><button class="btn" data-a="cancel">Close</button></div>',el);return;
+ }
+ else if(a==="landing"){openLanding();return}
+ else if(a==="layover"){openLayover(id);return}
+ else if(a==="endlay"){var mins=Math.max(5,Math.round(laySec/60));closeFso();S.hlog.push({id:layId,m:mins,n:"Layover session"});var dm=hob(layId,mins);beep("thud");say("Layover stamped: +"+mins+"m"+(dm>0?" (+"+dm+" Mark)":""))}
+ else if(a==="motion"){S.motion=id;beep("rustle")}
+ else if(a==="snd"){S.sounds[id]=!S.sounds[id]}
  else if(a==="cancel"){closeModal();return}
  else if(a==="hardreset"){S=fresh();prev={};V="today";closeModal();say("Fresh start. Your adventure begins again.")}
  save();render();if(up)say(up);if(fx||up)burst();fx=0;up=""}
 
-document.addEventListener("click",function(e){var t=e.target.closest("[data-a]");if(t&&!t.disabled&&t.tagName!=="SELECT")act(t.dataset.a,t.dataset.id,t.dataset.m,t)});
+
+var holdT=null,holdEl=null,holdFired=false,gDrag=false,gX=0;
+document.addEventListener("pointerdown",function(e){
+ var gl=e.target.closest(".globe");
+ if(gl){gDrag=true;gX=e.clientX;return}
+ var tk=e.target.closest("[data-hold]");
+ if(tk&&!tk.disabled){
+  holdEl=tk;holdFired=false;tk.classList.add("holding");
+  holdT=setTimeout(function(){
+   holdFired=true;tk.classList.remove("holding");
+   if(navigator.vibrate)navigator.vibrate(25);
+   beep("thud");
+   act(tk.dataset.a,tk.dataset.id,tk.dataset.m,tk);
+  },500);
+ }
+});
+document.addEventListener("pointermove",function(e){
+ if(!gDrag)return;
+ var dx=e.clientX-gX;gX=e.clientX;S.globeRot=(S.globeRot||0)+dx*0.8;
+ var gl=document.querySelector(".globe g[fill='#5fd08c']");
+ if(gl)gl.setAttribute("transform","rotate("+S.globeRot.toFixed(1)+" 56 56)");
+});
+document.addEventListener("pointerup",function(){
+ if(gDrag){gDrag=false;save()}
+ if(holdT){clearTimeout(holdT);holdT=null}
+ if(holdEl){holdEl.classList.remove("holding");holdEl=null}
+});
+document.addEventListener("pointercancel",function(){
+ gDrag=false;
+ if(holdT){clearTimeout(holdT);holdT=null}
+ if(holdEl){holdEl.classList.remove("holding");holdEl=null}
+});
+
+document.addEventListener("click",function(e){if(holdFired){holdFired=false;return}var t=e.target.closest("[data-a]");if(t&&!t.disabled&&t.tagName!=="SELECT")act(t.dataset.a,t.dataset.id,t.dataset.m,t)});
 document.addEventListener("change",function(e){if(e.target&&e.target.id==="gp-sel"){S.grandPick=e.target.value;save();render()}});
 document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!$("modal").hidden)closeModal()});
 setInterval(function(){if(V==="today"){var s=document.querySelector(".say");if(s)s.textContent=banner()}},60000);
