@@ -13,30 +13,31 @@
 body{margin:0;color:var(--ink);font:500 16px/1.45 var(--body);background:radial-gradient(90% 34% at 50% -6%,color-mix(in srgb,var(--tier) 16%,transparent),transparent),var(--bg);min-height:100vh}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
 button,select,input,textarea{font:inherit;color:inherit}button{cursor:pointer}button:focus-visible,summary:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
-.hud{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;padding:10px 16px;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.who{font:700 14px var(--head);letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hud{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;align-items:center;padding:10px 14px;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.who{font:700 13px var(--head);letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .xpbar{height:8px;border-radius:4px;background:var(--line);overflow:hidden}.xpbar i{display:block;height:100%;background:linear-gradient(90deg,var(--gem),var(--gold));transition:width .4s}
-.chips{grid-column:2;grid-row:1/3;display:flex;gap:6px;align-items:center}
-.chip{display:flex;align-items:center;gap:6px;font:800 15px var(--body);background:var(--surf);border:1px solid var(--line);border-radius:20px;padding:4px 10px}
-.chip i{width:14px;height:14px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f6d77a,#c8921f)}
+.chips{grid-column:2;grid-row:1/3;display:flex;gap:5px;align-items:center}
+.chip{display:flex;align-items:center;gap:5px;font:800 14px var(--body);background:var(--surf);border:1px solid var(--line);border-radius:20px;padding:4px 9px;box-shadow:inset 0 1px 0 color-mix(in srgb,#fff 22%,transparent)}
+.chip i{width:13px;height:13px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f6d77a,#c8921f)}
 .chip.mk{border-color:var(--gem)}.chip.mk i{border-radius:4px;transform:rotate(45deg) scale(.85);background:radial-gradient(circle at 35% 30%,#cdbfff,#6a4cd6)}
 .chip.km i{border-radius:50%;background:var(--tier)}
-.mute-btn{background:var(--surf);border:1px solid var(--line);border-radius:50%;width:32px;height:32px;display:grid;place-items:center;font-size:15px}
+.mute-btn{background:var(--surf);border:1px solid var(--line);border-radius:50%;width:30px;height:30px;display:grid;place-items:center;font-size:14px}
+@media (max-width:380px){.chip{padding:4px 7px;font-size:13px}.who{font-size:12px}}
 .bump{animation:bump .4s}@keyframes bump{50%{transform:scale(1.18)}}
 main{max-width:560px;margin:0 auto;padding:16px 16px 104px}
-h2{font:700 20px/1.2 var(--head);margin:26px 0 4px}h2:first-child{margin-top:4px}
+h2{font:700 20px/1.2 var(--head);margin:28px 0 4px}h2:first-child{margin-top:4px}
 .sub{color:var(--mute);font-size:14px;margin:0 0 12px}
-.say{margin:0 0 14px;padding:12px 14px;border-radius:14px;background:color-mix(in srgb,var(--tier) 12%,var(--surf));border-left:6px solid var(--tier);font-weight:700;font-size:15px}
+.say{margin:0 0 14px;padding:12px 14px;border-radius:14px;background:color-mix(in srgb,var(--tier) 12%,var(--surf));border-left:6px solid var(--tier);font-weight:700;font-size:15px;box-shadow:inset 0 1px 0 color-mix(in srgb,#fff 18%,transparent)}
 .celeb{margin:0 0 14px;padding:14px;border-radius:16px;background:linear-gradient(135deg,color-mix(in srgb,var(--gold) 20%,var(--surf)),color-mix(in srgb,var(--gem) 15%,var(--surf)));border:2px solid var(--gold);display:flex;justify-content:space-between;align-items:center;gap:12px}
 .celeb b{display:block;font:700 16px var(--head);color:var(--gold)}
 .celeb small{display:block;font-size:13px;color:var(--ink)}
 .tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.tier{border:2px solid var(--line);background:var(--surf);border-radius:18px;padding:12px 6px;text-align:center;min-height:82px}
+.tier{border:2px solid var(--line);background:var(--surf);border-radius:18px;padding:12px 6px;text-align:center;min-height:82px;box-shadow:inset 0 1px 0 color-mix(in srgb,#fff 18%,transparent)}
 .tier b{display:block;font:700 17px var(--head)}.tier small{color:var(--mute);font-size:12px}
 .tier .bar{display:block;height:8px;border-radius:4px;background:var(--c);width:var(--w);margin:0 auto 8px}
 .tier[aria-pressed=true]{border-color:var(--c);background:color-mix(in srgb,var(--c) 15%,var(--surf))}
 .list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.card{display:grid;grid-template-columns:46px 1fr auto;gap:14px;align-items:center;width:100%;text-align:left;background:var(--surf);border:1px solid var(--line);border-radius:18px;padding:14px;min-height:70px;box-shadow:0 1px 2px rgba(20,24,60,.06)}
+.card{display:grid;grid-template-columns:46px 1fr auto;gap:14px;align-items:center;width:100%;text-align:left;background:var(--surf);border:1px solid var(--line);border-radius:18px;padding:14px;min-height:70px;box-shadow:0 1px 2px rgba(20,24,60,.06),inset 0 1px 0 color-mix(in srgb,#fff 18%,transparent)}
 .em{width:46px;height:46px;border-radius:50%;background:color-mix(in srgb,var(--c,var(--tier)) 15%,var(--surf));color:color-mix(in srgb,var(--c,var(--tier)) 82%,var(--ink));display:grid;place-items:center;font-size:21px;line-height:1}
 .card b{display:block;font-weight:800}.card small{display:block;color:var(--mute);font-size:13px;line-height:1.3}
 .got{color:var(--c,var(--tier))!important;font-weight:800}
@@ -55,7 +56,7 @@ h2{font:700 20px/1.2 var(--head);margin:26px 0 4px}h2:first-child{margin-top:4px
 .sw::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:var(--surf);transition:left .15s}
 [aria-pressed=true]>.sw{background:var(--tier)}[aria-pressed=true]>.sw::after{left:21px}
 .meter{height:12px;border-radius:6px;background:var(--line);overflow:hidden;margin:8px 0 4px}.meter i{display:block;height:100%;background:linear-gradient(90deg,var(--amber),var(--tier));transition:width .4s}
-.panel{background:var(--surf);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:10px;box-shadow:0 1px 2px rgba(20,24,60,.06)}
+.panel{background:var(--surf);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:10px;box-shadow:0 1px 2px rgba(20,24,60,.06),inset 0 1px 0 color-mix(in srgb,#fff 18%,transparent)}
 .ph{display:grid;grid-template-columns:46px 1fr;gap:12px;align-items:center}
 .path{display:flex;justify-content:space-between;position:relative;margin:16px 11px 8px}
 .path::before,.path::after{content:"";position:absolute;left:0;top:9px;height:4px;border-radius:2px}
@@ -65,8 +66,8 @@ h2{font:700 20px/1.2 var(--head);margin:26px 0 4px}h2:first-child{margin-top:4px
 .nd.nxt{border-color:var(--c);animation:pulse 1.8s infinite}
 @keyframes pulse{50%{box-shadow:0 0 0 5px color-mix(in srgb,var(--c) 25%,transparent)}}
 .goal{border:1.5px solid var(--line);background:color-mix(in srgb,var(--c,var(--tier)) 7%,var(--bg));border-radius:12px;padding:10px 12px;color:var(--ink);font-size:13px;line-height:1.4}
-.goal b{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--c,var(--tier));margin-bottom:2px}
-details{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin-bottom:8px}
+.goal b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--c,var(--tier));margin-bottom:2px}
+details{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin-bottom:8px;box-shadow:inset 0 1px 0 color-mix(in srgb,#fff 18%,transparent)}
 summary{cursor:pointer;font-weight:800}details p{margin:8px 0 0;color:var(--mute)}
 .foot{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}.foot .btn{flex:1;color:var(--ink);--c:var(--line)}
 .nav{position:fixed;left:0;right:0;bottom:0;z-index:7;display:grid;grid-template-columns:repeat(5,1fr);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(10px);border-top:1px solid var(--line)}
@@ -74,7 +75,7 @@ summary{cursor:pointer;font-weight:800}details p{margin:8px 0 0;color:var(--mute
 .nav button[aria-current=page]{color:var(--ink);box-shadow:inset 0 -4px 0 var(--tier)}
 .toast{position:fixed;left:16px;right:16px;bottom:calc(76px + env(safe-area-inset-bottom,0px));max-width:528px;margin:0 auto;z-index:8;padding:12px 14px;border-radius:14px;background:var(--ink);color:var(--bg);font-weight:700;box-shadow:0 6px 24px rgba(0,0,0,.3)}
 .toast[hidden]{display:none}
-.hero{display:grid;grid-template-columns:84px 1fr;gap:16px;align-items:center;padding:16px;margin-bottom:10px;border-radius:20px;background:var(--surf);color:var(--ink);border:1px solid var(--line);box-shadow:0 2px 12px rgba(20,24,60,.07)}
+.hero{display:grid;grid-template-columns:84px 1fr;gap:16px;align-items:center;padding:16px;margin-bottom:10px;border-radius:20px;background:linear-gradient(145deg,color-mix(in srgb,var(--tier) 9%,var(--surf)),var(--surf));color:var(--ink);border:1px solid var(--line);box-shadow:0 2px 12px rgba(20,24,60,.07),inset 0 1px 0 color-mix(in srgb,#fff 22%,transparent)}
 .ring{width:84px;height:84px;border-radius:50%;background:conic-gradient(var(--tier) calc(var(--p)*1%),var(--line) 0);display:grid;place-items:center;position:relative}
 .ring::before{content:"";position:absolute;inset:8px;border-radius:50%;background:var(--surf)}
 .ring b{position:relative;font:700 20px var(--head);color:var(--ink)}
@@ -83,7 +84,7 @@ summary{cursor:pointer;font-weight:800}details p{margin:8px 0 0;color:var(--mute
 @keyframes fly{to{transform:translate(var(--dx),var(--dy)) rotate(240deg) scale(.4);opacity:0}}
 .modal{position:fixed;inset:0;z-index:30;display:grid;place-items:center;padding:20px;background:rgba(10,12,30,.55);backdrop-filter:blur(4px)}.modal[hidden]{display:none}
 .dlg{max-width:440px;width:100%;max-height:86vh;overflow:auto;background:var(--surf);border:1px solid var(--line);border-radius:20px;padding:20px}.dlg h3{margin:0 0 8px;font:700 20px var(--head)}.dlg p{margin:0 0 14px;color:var(--mute)}
-.dlg .row{display:flex;gap:8px}.dlg .btn{flex:1;--c:var(--line);color:var(--ink)}
+.dlg .row{display:flex;gap:8px;flex-wrap:wrap}.dlg .btn{flex:1;--c:var(--line);color:var(--ink)}
 .foot .btn.danger{--c:var(--red);color:var(--red)}
 .dlg .btn.danger{--c:var(--red);background:var(--red);color:#fff}
 .hc{grid-template-columns:46px 1fr}.hc .acts2{grid-column:1/-1;display:flex;gap:8px;align-items:center;flex-wrap:wrap}.hc .btn{flex:1}
@@ -114,14 +115,14 @@ summary{cursor:pointer;font-weight:800}details p{margin:8px 0 0;color:var(--mute
 .jlog div{display:flex;justify-content:space-between;gap:8px}
 .meta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
 .meta-box{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:6px 8px;font-size:12px}
-.meta-box b{display:block;font-size:11px;color:var(--mute);text-transform:uppercase}
+.meta-box b{display:block;font-size:10px;color:var(--mute);text-transform:uppercase;letter-spacing:.03em}
 .cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
 .cal-dow{font-size:11px;font-weight:800;color:var(--mute);padding-bottom:4px}
-.cal-day{border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:6px 2px;font-size:12px;min-height:46px;display:flex;flex-direction:column;align-items:center;justify-content:space-between}
+.cal-day{border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:5px 2px;font-size:12px;min-height:48px;display:flex;flex-direction:column;align-items:center;justify-content:space-between}
 .cal-day.today{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
 .cal-day.sel{background:color-mix(in srgb,var(--tier) 18%,var(--surf));border-color:var(--tier);font-weight:800}
-.cal-dot{width:6px;height:6px;border-radius:50%;background:var(--tier)}
+.cal-tag{font-size:9px;font-weight:800;color:var(--tier);line-height:1.1}
 .seg{display:flex;gap:6px;margin-bottom:12px}
 .seg button{flex:1;border:1.5px solid var(--line);background:var(--surf);border-radius:12px;padding:8px;font-weight:800;font-size:13px}
 .seg button[aria-pressed=true]{border-color:var(--tier);background:color-mix(in srgb,var(--tier) 14%,var(--surf))}
@@ -137,14 +138,17 @@ summary{cursor:pointer;font-weight:800}details p{margin:8px 0 0;color:var(--mute
 <main id="app"></main>
 <nav class="nav" id="nav"></nav>
 <div class="toast" id="toast" hidden role="status"></div>
-<div class="modal" id="modal" hidden><div class="dlg" role="dialog" aria-modal="true" aria-labelledby="mt"><div id="mb"></div></div></div>
+<div class="modal" id="modal" hidden><div class="dlg" role="dialog" aria-modal="true"><div id="mb"></div></div></div>
 <script>
 (function(){
 var KEY="stronghold-v1",LAP=0,$=function(i){return document.getElementById(i)};
-function today(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function pad(n){return String(n).padStart(2,"0")}
+function fmtKey(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
+function parseKey(s){var p=s.split("-").map(Number);return new Date(p[0],p[1]-1,p[2])}
+function today(){return fmtKey(new Date())}
 function wk(){return[0,6].indexOf(new Date().getDay())>-1}
 function fresh(){return{day:today(),tier:"green",convoy:false,done:{},tkm:0,mks:0,km:0,bonus:0,hlog:[],xp:{},claimed:{},wishlist:{},stopNotes:{},grandPick:"",off:wk(),muted:false,hist:{},customDuties:{},fieldMood:""}}
-var S=fresh(),V="today",prev={},fx=0,up="",celeb="",repMode="week",calDate=new Date(),selDay=today();
+var S=fresh(),V="today",prev={},fx=0,up="",celeb="",repMode="week",calDate=new Date(),selDay=today(),wishOnly=false,lastFocus=null;
 try{var p=JSON.parse(localStorage.getItem(KEY)||"null");if(p)for(var k in p)S[k]=p[k]}catch(e){}
 ["done","xp","claimed","wishlist","stopNotes","hist","customDuties"].forEach(function(k){if(!S[k])S[k]={}});
 if(!S.hlog||!S.hlog.push)S.hlog=[];S.km=S.km||0;S.tkm=S.tkm||0;S.bonus=S.bonus||0;S.mks=S.mks||0;S.grandPick=S.grandPick||"";S.muted=!!S.muted;
@@ -153,9 +157,9 @@ function syncHist(){
  S.hist[S.day]={km:S.tkm,done:Object.keys(S.done).length,hmin:S.hlog.reduce(function(a,b){return a+b.m},0),hlog:S.hlog.slice(),tier:S.tier};
 }
 if(S.day!==today()){syncHist();S.day=today();S.done={};S.hlog=[];S.bonus=0;S.tkm=0;S.off=wk();S.fieldMood=""}
+syncHist();
 function save(){syncHist();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 
-// Subtle Web Audio API synthesizer
 var AC=null;
 function beep(type){
  if(S.muted)return;
@@ -178,37 +182,37 @@ function DL(t){return DUTIES[t].map(function(d){var base=S.off&&OFF[d.id]?OFF[d.
 function K(m){return Math.round(m*1.5)}
 
 var HOB=[
- {id:"music",e:"&#127929;",n:"Music Production",d:"Maschine 3 and MiniFreak.",c:"#7b5ea7",diff:"High",pace:"3-4h / wk",scale:"1m: Loop · 6m: EP · 2y: Live Set",obj:[
+ {id:"music",e:"&#127929;",n:"Music Production",d:"Maschine 3 and MiniFreak.",c:"#7b5ea7",diff:"High",likely:"Steady (Long-term)",pace:"3-4h / wk",scale:"1m: Loop · 6m: EP · 2y: Live Set",obj:[
   "Route Maschine 3 audio & build a 4-bar drum loop",
   "Design 3 custom MiniFreak patches & save a template",
   "Arrange a full 2-minute track with intro, drop & outro",
   "Perform a live 15-minute hardware jam without stopping"
  ]},
- {id:"origami",e:"&#129419;",n:"Origami",d:"Geometric folds and wildlife models.",c:"#c2543a",diff:"Moderate",pace:"1-2h / wk",scale:"1m: Bases · 6m: Wet-fold · 1y: Diorama",obj:[
+ {id:"origami",e:"&#129419;",n:"Origami",d:"Geometric folds and wildlife models.",c:"#c2543a",diff:"Moderate",likely:"High (At own pace)",pace:"1-2h / wk",scale:"1m: Bases · 6m: Wet-fold · 1y: Diorama",obj:[
   "Master crisp valley/mountain folds & preliminary bases",
   "Complete 3 intermediate animals from single uncut squares",
   "Shape a realistic giraffe or wildlife model using wet-folding",
   "Build a multi-piece framed wildlife diorama"
  ]},
- {id:"play",e:"&#127918;",n:"PlayStation",d:"Red Dead 2 or Unrailed! with Georgie.",c:"#2f7d9a",diff:"Low (Co-op)",pace:"2-3h / wk",scale:"1m: Groove · 3m: Campaign · 1y: 100%",obj:[
+ {id:"play",e:"&#127918;",n:"PlayStation",d:"Red Dead 2 or Unrailed! with Georgie.",c:"#2f7d9a",diff:"Low (Co-op)",likely:"Very High",pace:"2-3h / wk",scale:"1m: Groove · 3m: Campaign · 1y: 100%",obj:[
   "Settle in for a relaxed co-op session with zero pressure",
   "Coordinate smooth track-building streaks in Unrailed!",
   "Complete a major story chapter or co-op campaign together",
   "Master a favourite co-op world or 100% a shared favourite"
  ]},
- {id:"sail",e:"&#9973;",n:"Dinghy Sailing",d:"Hawley Lake. Back ashore before 2 PM.",c:"#2a6fb0",diff:"High (Weather)",pace:"2h / wk",scale:"1m: Rigging · 6m: Tacks · 1y: Solo Helm",obj:[
+ {id:"sail",e:"&#9973;",n:"Dinghy Sailing",d:"Hawley Lake. Back ashore before 2 PM.",c:"#2a6fb0",diff:"High (Weather)",likely:"Moderate (Window)",pace:"2h / wk",scale:"1m: Rigging · 6m: Tacks · 1y: Solo Helm",obj:[
   "Rig a centre-main dinghy (RS Zest) & launch smoothly",
   "Link clean tacks and gybes without losing boat speed",
   "Read wind shifts, trim sails & handle a controlled capsize",
   "Sail a full lake course confidently solo before 2 PM"
  ]},
- {id:"boulder",e:"&#129495;",n:"Bouldering",d:"Evening sessions, after 5 PM.",c:"#8a6d3b",diff:"High (Physical)",pace:"2-3h / wk",scale:"1m: V1 · 6m: V2-V3 · 2y: Overhangs",obj:[
+ {id:"boulder",e:"&#129495;",n:"Bouldering",d:"Evening sessions, after 5 PM.",c:"#8a6d3b",diff:"High (Physical)",likely:"Steady (Evening)",pace:"2-3h / wk",scale:"1m: V1 · 6m: V2-V3 · 2y: Overhangs",obj:[
   "Climb V0-V1 routes focusing on quiet feet & straight arms",
   "Use flagging, heel hooks & hip-to-wall balance on V2s",
   "Read sequences from the mat & send 3+ V3 problems",
   "Climb overhangs & technical slabs with controlled power"
  ]},
- {id:"build",e:"&#129690;",n:"Tavern Carpentry",d:"Framing, carpentry and decor.",c:"#5f8a2e",diff:"Moderate-High",pace:"3h / wk",scale:"1m: Frame · 3m: Table · 6m: Tavern Done",obj:[
+ {id:"build",e:"&#129690;",n:"Tavern Carpentry",d:"Framing, carpentry and decor.",c:"#5f8a2e",diff:"Moderate-High",likely:"High (Project)",pace:"3h / wk",scale:"1m: Frame · 3m: Table · 6m: Tavern Done",obj:[
   "Measure, square & frame the 3-sided banquette seating",
   "Build the 900mm gaming table & fit the hidden mini-fridge",
   "Finish the upturned barrel table, shelving & sheepskin trim",
@@ -240,7 +244,7 @@ function rk(id){var x=S.xp[id]||0,n=0;TH.forEach(function(t){if(x>=t)n++});retur
 function hm(x){return Math.floor(x/60)+"h "+x%60+"m"}
 function nf(x){return Math.round(x).toLocaleString("en-GB")}
 function addKm(n){var o=S.km,b=lvOf(o),m="";S.km=Math.max(0,o+n);S.tkm=Math.max(0,S.tkm+n);if(n>0){STOPS.forEach(function(q,j){if(j>0&&CUM[j]>o&&CUM[j]<=S.km){m="Arrived in "+q.n+"! "+flag(q.c);celeb="Arrived in "+flag(q.c)+" "+q.n+"!"+(S.wishlist[j]?" (Wishlist Stop!)":"")}});var a=lvOf(S.km);if(a>b){m=(m?m+" ":"")+"Rank up! Travel Rank "+a+": "+lname(a)+".";celeb="Travel Rank "+a+": "+lname(a)+"!"}if(m)up=m}}
-function hob(id,m,note){var o=S.xp[id]||0,b=rk(id),w=Math.max(0,o+m);S.xp[id]=w;var d=Math.floor(w/60)-Math.floor(o/60);S.mks=Math.max(0,S.mks+d);if(d>0){fx=1;beep("mark")}else beep("knock");var a=rk(id);if(a>b){up=HOB.filter(function(s){return s.id===id})[0].n+" reached "+RN[a-1]+"!";celeb=up}return d}
+function hob(id,m){var o=S.xp[id]||0,b=rk(id),w=Math.max(0,o+m);S.xp[id]=w;var d=Math.floor(w/60)-Math.floor(o/60);S.mks=Math.max(0,S.mks+d);if(d>0){fx=1;beep("mark")}else if(m>0)beep("knock");var a=rk(id);if(a>b){up=HOB.filter(function(s){return s.id===id})[0].n+" reached "+RN[a-1]+"!";celeb=up}return d}
 function burst(){if(window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches)return;var r=$("cm").getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2;for(var i=0;i<18;i++){var s=document.createElement("i"),a=Math.random()*6.28,d=60+Math.random()*90;s.className="spk";s.style.cssText="left:"+x+"px;top:"+y+"px;--dx:"+Math.cos(a)*d+"px;--dy:"+Math.sin(a)*d+"px;background:"+["#f2b84b","#a58cff","#5fd08c","#fff"][i%4];document.body.appendChild(s);setTimeout(function(e){e.remove()}.bind(null,s),900)}}
 function say(m){var t=$("toast");t.textContent=m;t.hidden=false;clearTimeout(say.t);say.t=setTimeout(function(){t.hidden=true},3200)}
 function tierDef(){return TIERS.filter(function(t){return t.id===S.tier})[0]}
@@ -263,6 +267,7 @@ function globeSvg(pct){
   +'<circle cx="'+px.toFixed(1)+'" cy="'+py.toFixed(1)+'" r="5.5" fill="var(--gold)" stroke="#fff" stroke-width="2"/>'
   +'</svg>';
 }
+function inConvoyWindow(){var n=new Date(),day=n.getDay(),hr=n.getHours()+n.getMinutes()/60;return(day===5&&hr>=13)||(day===6)||(day===0&&hr<16)}
 function banner(){var n=new Date(),h=n.getHours()+n.getMinutes()/60;
  if(S.convoy)return"Convoy weekend. Be fully present with Raife. Your hobbies are always open.";
  if(h>=20)return"The curfew bell has rung. Ledgers are locked. Evening belongs to Georgie.";
@@ -286,11 +291,12 @@ function btn(a,id,t,s,dis){return'<button class="btn" data-a="'+a+'" data-id="'+
 function hero(p){var n=nextLm();return'<div class="hero"><div class="ring" style="--p:'+p+'"><b>'+p+'%</b></div><div><div class="ht">&#127757; '+lname(lvOf(S.km))+'</div><p>'+nf(S.tkm)+' km today. '+(n?'Next stop: '+n[0]+', '+nf(n[1]-S.km)+' km away.':'You have walked the whole world.')+'</p></div></div>'}
 
 function vToday(){var L=DL(S.tier),core=L.filter(function(d){return S.done[d.id]}).length,pct=S.convoy?100:Math.round(core/L.length*100),h=(celeb?'<div class="celeb"><div><b>&#127881; Milestone!</b><small>'+celeb+'</small></div><button class="btn" data-a="clrcel">Nice</button></div>':'')+hero(pct)+timePills();
+ if(!S.convoy&&inConvoyWindow())h+='<div class="celeb" style="border-color:var(--tier)"><div><b>Convoy Window Active</b><small>Fri 1 PM – Sun 4 PM with Raife. Toggle Convoy mode?</small></div><button class="btn" data-a="convoy">Enable</button></div>';
  h+='<h2>Your energy today</h2><p class="sub">Pick the battery you have. The tasks change to match.</p><div class="tiers">'+TIERS.map(function(t){return'<button class="tier" data-a="tier" data-id="'+t.id+'" style="--c:var('+t.c+');--w:'+t.w+'" aria-pressed="'+(S.tier===t.id)+'"><i class="bar"></i><b>'+t.n+'</b><small>'+t.s+'</small></button>'}).join("")+'</div>';
  h+='<button class="convoy" data-a="off" aria-pressed="'+S.off+'"><span class="sw"></span><span><b>Day off</b><small style="display:block;color:var(--mute);font-size:13px">Swaps Work Blocks for Home Focus blocks. Same distance.</small></span></button><button class="convoy" data-a="convoy" aria-pressed="'+S.convoy+'"><span class="sw"></span><span><b>Northern Convoy weekend</b><small style="display:block;color:var(--mute);font-size:13px">Friday 1 PM to Sunday 4 PM with Raife. Tasks pause.</small></span></button>';
  if(!S.convoy){h+='<h2>Today’s tasks</h2><div class="meter"><i style="width:'+pct+'%"></i></div><p class="sub">'+(pct===100?(S.tier==="red"?"Minimums done. Everything else is waived.":"All done. You are off the clock."):core+" of "+L.length+" tasks done. Each one carries you further round the globe.")+'</p><div class="list">'+L.map(function(d){var on=S.done[d.id];return'<button class="card'+(on?' done':'')+'" data-a="duty" data-id="'+d.id+'" aria-pressed="'+(!!on)+'"><span class="em">'+(on?"&#10003;":d.e)+'</span><span><b>'+d.n+'</b><small>'+d.d+' About '+d.m+' min.</small></span><span class="pay">+'+K(d.m)+'<small>km</small></span></button>'}).join("")+'</div>';
   if(S.tier==="green"){var ok=S.done.led1&&S.done.led2,full=L.every(function(d){return S.done[d.id]});h+='<h2>Bonus task</h2><p class="sub">'+(full?"You are off the clock, so this is purely optional.":"Unlocks once both "+(S.off?"Home Focus blocks":"Work Blocks")+" are done.")+'</p><div class="list"><button class="card" data-a="bonus"'+(ok&&S.bonus<5?"":" disabled")+'><span class="em">+</span><span><b>Bonus '+(S.off?"Home Focus":"Work Block")+'</b><small>Extra 45-minute block. '+S.bonus+' of 5 today.</small></span><span class="pay">+'+K(45)+'<small>km</small></span></button>'+(S.bonus?'<button class="link" data-a="unbonus">Undo last bonus block</button>':'')+'</div>'}}
- h+='<h2>Field check &amp; Rest</h2><p class="sub">Optional mood/wind check or a free rest.</p><div class="list">'
+ h+='<h2>Field check &amp; Rest</h2><p class="sub">Optional prompt roll or a free rest.</p><div class="list">'
   +card({e:"&#127922;",c:"#7b5ea7",n:"Hobby Dice Roll",d:S.fieldMood||"Stuck choosing? Roll for a quick hobby prompt.",r:btn("dice","d","Roll","Prompt")})
   +card({e:"&#128715;",c:"#3a8f9a",n:"Rest and Decompression",d:"Blanket, comfort show, rooibos or Vimto. Release from self-criticism.",r:btn("rest","r","Take it","Free")})
   +'</div>';return h}
@@ -299,14 +305,14 @@ function vJourney(){var i=where(S.km),a=STOPS[i],b=STOPS[i+1],fr=b&&a.d?Math.min
  LS.forEach(function(s,l){if(i>=s&&i<=LE[l])cl=l});
  h='<h2>The Eastbound Loop</h2><p class="sub">Tap the globe or any stop to inspect it, add travel notes, or star your wishlist.</p><div class="panel"><div class="globe-wrap">'+globeSvg(S.km/LAP*100)+'<div><div class="big">'+nf(S.km)+' km</div><p class="sub" style="margin:4px 0 0">'+(S.km/LAP*100).toFixed(1)+'% of '+nf(LAP)+' km<br>Leg '+(cl+1)+' of 7 · Rank '+lvOf(S.km)+'<br>&#9733; '+wCount+' on wishlist</p></div></div><div class="trk"><div class="tf"><span class="fl">'+flag(a.c)+'</span><b>'+a.n+'</b></div>'+(b?'<div class="tf r"><b>'+b.n+'</b><span class="fl">'+flag(b.c)+'</span></div>':'')+'</div>';
  h+='<svg viewBox="0 0 320 52" class="rail" role="img" aria-label="Progress to the next stop"><line x1="22" y1="40" x2="298" y2="40" style="stroke:var(--line)" stroke-width="5" stroke-linecap="round"/><line x1="22" y1="40" x2="'+x+'" y2="40" style="stroke:var(--tier)" stroke-width="5" stroke-linecap="round"/><g transform="translate('+x+' 22) scale(.9)" style="color:var(--tier)"><circle cx="0" cy="-1" r="16" style="fill:var(--surf);stroke:var(--tier)" stroke-width="2.5"/><circle cx="1" cy="-10" r="3.2" fill="currentColor"/><path d="M1 -6 L-1 2 M-1 2 L-6 8 M-1 2 L4 6 L3 12 M1 -5 L-5 -1 L-8 -4 M1 -5 L6 -3 L9 1" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></g></svg>';
- h+=(b?'<p style="margin:0"><b>'+nf(CUM[i+1]-S.km)+' km</b> to '+b.n+' ('+nf(a.d)+' km stretch)</p>':'<p style="margin:0"><b>Journey complete.</b> You are home.</p>')+'</div>';
+ h+=(b?'<p style="margin:0"><b>'+nf(CUM[i+1]-S.km)+' km</b> to '+b.n+' ('+nf(a.d)+' km stretch)</p>':'<p style="margin:0"><b>Journey complete.</b> You are home.</p>')+'<div style="margin-top:10px"><button class="btn" data-a="jumpcur">Jump to Current Stop ('+a.n+')</button></div></div>';
  LEGS.forEach(function(g,l){var d=0,j;for(j=LS[l];j<=LE[l];j++)d+=STOPS[j].d;var dn=Math.max(0,Math.min(d,S.km-CUM[LS[l]]));
-  h+='<details'+(l===cl?' open':'')+'><summary>'+g[0]+'<small style="display:block;color:var(--mute);font-weight:600">'+nf(dn)+' of '+nf(d)+' km · '+(LE[l]-LS[l]+1)+' stops</small></summary><div class="mini" style="--c:var(--tier);margin-bottom:6px"><i style="width:'+(d?dn/d*100:0)+'%"></i></div>';
-  for(j=LS[l];j<=LE[l];j++){var s=STOPS[j],nx=STOPS[j+1],ws=!!S.wishlist[j],nt=S.stopNotes[j];h+='<div class="lm'+(j<i?' on':'')+(j===i?' cur':'')+'"><span class="lm-main" data-a="stopinfo" data-id="'+j+'"><b>'+(j<i?'&#10003; ':'')+flag(s.c)+' '+s.n+(nt?' &#128221;':'')+'</b>'+(s.p?' <small style="display:inline">pit stop</small>':'')+(nx?'<small>to '+nx.n+'</small>':'<small>Finish</small>')+'</span><span class="lm-r"><span class="lm-d">'+(nx?nf(s.d)+' km':'Home')+'</span><button class="wish-btn" data-a="wish" data-id="'+j+'" aria-pressed="'+ws+'" title="Toggle wishlist">'+(ws?'&#9733;':'&#9734;')+'</button></span></div>'}
+  h+='<details id="leg-'+l+'"'+(l===cl?' open':'')+'><summary>'+g[0]+'<small style="display:block;color:var(--mute);font-weight:600">'+nf(dn)+' of '+nf(d)+' km · '+(LE[l]-LS[l]+1)+' stops</small></summary><div class="mini" style="--c:var(--tier);margin-bottom:6px"><i style="width:'+(d?dn/d*100:0)+'%"></i></div>';
+  for(j=LS[l];j<=LE[l];j++){var s=STOPS[j],nx=STOPS[j+1],ws=!!S.wishlist[j],nt=S.stopNotes[j];h+='<div id="stop-'+j+'" class="lm'+(j<i?' on':'')+(j===i?' cur':'')+'"><span class="lm-main" data-a="stopinfo" data-id="'+j+'"><b>'+(j<i?'&#10003; ':'')+flag(s.c)+' '+s.n+(nt?' &#128221;':'')+'</b>'+(s.p?' <small style="display:inline">pit stop</small>':'')+(nx?'<small>to '+nx.n+'</small>':'<small>Finish</small>')+'</span><span class="lm-r"><span class="lm-d">'+(nx?nf(s.d)+' km':'Home')+'</span><button class="wish-btn" data-a="wish" data-id="'+j+'" aria-pressed="'+ws+'" title="Toggle wishlist">'+(ws?'&#9733;':'&#9734;')+'</button></span></div>'}
   h+='</details>'});
  return h}
 
-function exploredList(){var i=where(S.km),out=[],j;for(j=0;j<=i;j++)out.push({idx:j,s:STOPS[j],w:!!S.wishlist[j]});out.sort(function(a,b){return(b.w?1:0)-(a.w?1:0)});return out}
+function exploredList(){var i=where(S.km),out=[],j;for(j=0;j<=i;j++){if(wishOnly&&!S.wishlist[j])continue;out.push({idx:j,s:STOPS[j],w:!!S.wishlist[j]})}out.sort(function(a,b){return(b.w?1:0)-(a.w?1:0)});return out}
 function vHobbies(){var nx=RW.filter(function(r){return!S.claimed[r[0]]})[0],h='<h2>Hobby hub</h2><p class="sub">Every 60 minutes earns a Mark, and Marks are never spent. Log quick blocks or custom minutes with a session note.</p>';
  if(nx)h+='<div class="panel" style="--c:var(--gem)"><b>Next reward: '+nx[2]+'</b><div class="mini"><i style="width:'+Math.min(100,S.mks/nx[0]*100)+'%"></i></div><small style="color:var(--mute)">'+(S.mks>=nx[0]?"Ready to claim in the chest below.":(nx[0]-S.mks)+" Marks to go ("+S.mks+" of "+nx[0]+")")+'</small></div>';
  h+='<div class="list">'+HOB.map(function(a){var x=S.xp[a.id]||0,logs=S.hlog.filter(function(l){return l.id===a.id}),t=logs.reduce(function(s,l){return s+l.m},0);
@@ -315,15 +321,16 @@ function vHobbies(){var nx=RW.filter(function(r){return!S.claimed[r[0]]})[0],h='
  h+='<h2>Reward chest</h2><p class="sub">Rewards unlock as your Marks grow. Claiming costs nothing, and high thresholds keep spending rare.</p><div class="list">'+RW.map(function(r){var c=S.claimed[r[0]],ok=S.mks>=r[0],isGrand=r[0]===750;
   if(isGrand){
    var ex=exploredList(),opts=ex.map(function(o){var lbl=flag(o.s.c)+' '+o.s.n+(o.w?' (Wishlist)':'');return'<option value="'+o.s.n+'"'+(S.grandPick===o.s.n?' selected':'')+'>'+lbl+'</option>'}).join("");
-   return'<div class="panel" style="--c:#b87a0a"><div class="ph"><span class="em" style="--c:#b87a0a">'+r[1]+'</span><span><b>'+r[2]+'</b><small style="display:block;color:var(--mute);font-size:13px">At '+r[0]+' Marks · Pick from '+ex.length+' explored location'+(ex.length===1?'':'s')+'</small></span></div>'
-    +(ok?'<div class="gp-box"><select class="gp-sel" id="gp-sel" data-a="gpick"><option value="">Choose an explored location for your treat...</option>'+opts+'</select>'+(c?'<span class="pay" style="--c:var(--mute)">Claimed: '+(S.grandPick||'Chosen')+'</span>':btn("claim",r[0],"Claim Grand Prize","",!S.grandPick))+'</div>':'<div class="gp-box"><small style="color:var(--mute)">Locked until '+r[0]+' Marks. Wishlisted &amp; explored stops will appear here.</small></div>')+'</div>';
+   return'<div class="panel" style="--c:#b87a0a"><div class="ph"><span class="em" style="--c:#b87a0a">'+r[1]+'</span><span><b>'+r[2]+'</b><small style="display:block;color:var(--mute);font-size:13px">At '+r[0]+' Marks · '+ex.length+' matching explored stop'+(ex.length===1?'':'s')+'</small></span></div>'
+    +(ok?'<div class="gp-box"><button class="link" style="justify-self:start" data-a="wishfilt">'+(wishOnly?'Showing Wishlist Only (Show All Explored)':'Showing All Explored (Filter Wishlist Only)')+'</button><select class="gp-sel" id="gp-sel" data-a="gpick"><option value="">Choose an explored location for your treat...</option>'+opts+'</select>'+(c?'<span class="pay" style="--c:var(--mute)">Claimed: '+(S.grandPick||'Chosen')+'</span>':btn("claim",r[0],"Claim Grand Prize","",!S.grandPick))+'</div>':'<div class="gp-box"><small style="color:var(--mute)">Locked until '+r[0]+' Marks. Wishlisted &amp; explored stops will appear here.</small></div>')+'</div>';
   }
   return card({e:r[1],c:"#6a4cd6",n:r[2],d:"At "+r[0]+" Marks",r:c?'<span class="pay" style="--c:var(--mute)">Claimed</span>':btn("claim",r[0],ok?"Claim":"Locked","",!ok)})}).join("")+'</div>';return h}
 
 function objFor(a,n){var idx=Math.min(a.obj.length-1,Math.floor(n/2.6));return a.obj[idx]}
-function vSkills(){return'<h2>Skill trees</h2><p class="sub">Ten ranks per skill (200 hours to Master), with realistic difficulty and timescale expectations.</p>'+SK.map(function(a){var x=S.xp[a.id]||0,n=rk(a.id),nx=TH[n],pv=n?TH[n-1]:0,fr=nx?(x-pv)/(nx-pv):1,pp=n?Math.min(100,((n-1)+(nx?fr:1))/9*100):0;
- return'<div class="panel" style="--c:'+a.c+'"><div class="ph"><span class="em">'+a.e+'</span><span><b>'+a.n+'</b><small style="display:block;color:var(--mute);font-size:13px">'+(n?RN[n-1]:"Unranked")+' · '+hm(x)+' practised</small></span></div><div class="path" style="--p:'+pp+'%">'+RN.map(function(r,i){return'<i class="nd'+(i<n?" on":"")+(i===n?" nxt":"")+'">'+(i+1)+'</i>'}).join("")+'</div><small style="color:var(--mute)">'+(nx?"Next: "+RN[n]+" in "+hm(nx-x):"Mastery reached.")+'</small><div class="meta-grid"><div class="meta-box"><b>Difficulty</b>'+a.diff+'</div><div class="meta-box"><b>Target Pace</b>'+a.pace+'</div><div class="meta-box"><b>Timescale</b>'+a.scale+'</div></div><div class="goal" style="margin-top:10px;--c:'+a.c+'"><b>Current Learning Objective</b>'+objFor(a,n)+'</div></div>'}).join("")}
+function vSkills(){return'<h2>Skill trees</h2><p class="sub">Ten ranks per skill (200 hours to Master), with difficulty, mastery likelihood, and timescales.</p>'+SK.map(function(a){var x=S.xp[a.id]||0,n=rk(a.id),nx=TH[n],pv=n?TH[n-1]:0,fr=nx?(x-pv)/(nx-pv):1,pp=n?Math.min(100,((n-1)+(nx?fr:1))/9*100):0;
+ return'<div class="panel" style="--c:'+a.c+'"><div class="ph"><span class="em">'+a.e+'</span><span><b>'+a.n+'</b><small style="display:block;color:var(--mute);font-size:13px">'+(n?RN[n-1]:"Unranked")+' · '+hm(x)+' practised</small></span></div><div class="goal" style="margin-top:10px;--c:'+a.c+'"><b>Current Learning Objective</b>'+objFor(a,n)+'</div><div class="path" style="--p:'+pp+'%">'+RN.map(function(r,i){return'<i class="nd'+(i<n?" on":"")+(i===n?" nxt":"")+'">'+(i+1)+'</i>'}).join("")+'</div><small style="color:var(--mute)">'+(nx?"Next: "+RN[n]+" in "+hm(nx-x):"Mastery reached.")+'</small><div class="meta-grid"><div class="meta-box"><b>Difficulty</b>'+a.diff+'</div><div class="meta-box"><b>Likelihood</b>'+a.likely+'</div><div class="meta-box"><b>Pace &amp; Scale</b>'+a.pace+' · '+a.scale+'</div></div></div>'}).join("")}
 
+function mondayOf(d){var x=new Date(d.getFullYear(),d.getMonth(),d.getDate()),diff=(x.getDay()+6)%7;x.setDate(x.getDate()-diff);return x}
 function vReports(){
  var y=calDate.getFullYear(),m=calDate.getMonth(),first=new Date(y,m,1).getDay(),days=new Date(y,m+1,0).getDate(),offset=(first+6)%7;
  var mName=calDate.toLocaleString("en-GB",{month:"long",year:"numeric"});
@@ -331,36 +338,39 @@ function vReports(){
  ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].forEach(function(d){cal+='<div class="cal-dow">'+d+'</div>'});
  for(var i=0;i<offset;i++)cal+='<div></div>';
  for(var d=1;d<=days;d++){
-  var ds=y+"-"+String(m+1).padStart(2,"0")+"-"+String(d).padStart(2,"0"),hd=S.hist[ds],isT=ds===today(),isS=ds===selDay;
-  cal+='<button class="cal-day'+(isT?' today':'')+(isS?' sel':'')+'" data-a="selday" data-id="'+ds+'"><span>'+d+'</span>'+(hd&&(hd.km||hd.hmin)?'<i class="cal-dot"></i>':'')+'</button>';
+  var ds=y+"-"+pad(m+1)+"-"+pad(d),hd=S.hist[ds],isT=ds===today(),isS=ds===selDay;
+  var tag="";
+  if(hd){if(hd.hmin>=60)tag="&#9733; "+Math.round(hd.km)+"k";else if(hd.km||hd.hmin)tag=Math.round(hd.km)+"k"}
+  cal+='<button class="cal-day'+(isT?' today':'')+(isS?' sel':'')+'" data-a="selday" data-id="'+ds+'"><span>'+d+'</span><span class="cal-tag">'+tag+'</span></button>';
  }
  cal+='</div>';
  var sd=S.hist[selDay];
  cal+='<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:13px"><b>'+selDay+'</b>: '+(sd?nf(sd.km)+' km · '+sd.done+' tasks · '+sd.hmin+'m hobbies':'No activity logged.')+'</div></div>';
 
- // Weekly / Monthly Breakdown
- var now=new Date(),keys=Object.keys(S.hist),wKm=0,wTasks=0,wMin=0,mKm=0,mTasks=0,mMin=0,byH={};
+ var mon=mondayOf(new Date()),sun=new Date(mon.getFullYear(),mon.getMonth(),mon.getDate()+6);
+ var keys=Object.keys(S.hist),wKm=0,wTasks=0,wMin=0,wH={},mKm=0,mTasks=0,mMin=0,mH={};
  keys.forEach(function(k){
-  var dt=new Date(k+"T00:00:00"),diff=(now-dt)/86400000,it=S.hist[k];
-  if(diff>=0&&diff<7){wKm+=it.km||0;wTasks+=it.done||0;wMin+=it.hmin||0}
-  if(dt.getFullYear()===now.getFullYear()&&dt.getMonth()===now.getMonth()){
+  var dt=parseKey(k),it=S.hist[k];
+  if(dt>=mon&&dt<=sun){
+   wKm+=it.km||0;wTasks+=it.done||0;wMin+=it.hmin||0;
+   (it.hlog||[]).forEach(function(l){wH[l.id]=(wH[l.id]||0)+l.m});
+  }
+  if(dt.getFullYear()===y&&dt.getMonth()===m){
    mKm+=it.km||0;mTasks+=it.done||0;mMin+=it.hmin||0;
-   (it.hlog||[]).forEach(function(l){byH[l.id]=(byH[l.id]||0)+l.m});
+   (it.hlog||[]).forEach(function(l){mH[l.id]=(mH[l.id]||0)+l.m});
   }
  });
- var isW=repMode==="week",rKm=isW?wKm:mKm,rT=isW?wTasks:mTasks,rM=isW?wMin:mMin;
- var rep='<div class="seg"><button data-a="repmode" data-id="week" aria-pressed="'+isW+'">Weekly Report</button><button data-a="repmode" data-id="month" aria-pressed="'+!isW+'">Monthly Report</button></div>'
+ var isW=repMode==="week",rKm=isW?wKm:mKm,rT=isW?wTasks:mTasks,rM=isW?wMin:mMin,rH=isW?wH:mH;
+ var rep='<div class="seg"><button data-a="repmode" data-id="week" aria-pressed="'+isW+'">This Week (Mon–Sun)</button><button data-a="repmode" data-id="month" aria-pressed="'+!isW+'">'+calDate.toLocaleString("en-GB",{month:"short"})+' Report</button></div>'
   +'<div class="rep-grid">'
   +'<div class="rep-stat"><b>'+nf(rKm)+' km</b><small>Distance walked</small></div>'
   +'<div class="rep-stat"><b>'+rT+'</b><small>Tasks completed</small></div>'
   +'<div class="rep-stat"><b>'+hm(rM)+'</b><small>Hobby time</small></div>'
   +'<div class="rep-stat"><b>'+Math.floor(rM/60)+'</b><small>Marks earned</small></div>'
   +'</div>';
- if(!isW){
-  var hList=HOB.map(function(a){return byH[a.id]?'<div><span>'+a.e+' '+a.n+'</span><b>'+hm(byH[a.id])+'</b></div>':''}).join("");
-  if(hList)rep+='<div class="panel"><b style="display:block;margin-bottom:6px">Monthly Hobby Breakdown</b><div class="jlog" style="border:0;padding:0;margin:0">'+hList+'</div></div>';
- }
- return'<h2>Calendar &amp; Reports</h2><p class="sub">Track your daily consistency and review weekly or monthly breakdowns.</p>'+cal+rep;
+ var hList=HOB.map(function(a){return rH[a.id]?'<div><span>'+a.e+' '+a.n+'</span><b>'+hm(rH[a.id])+'</b></div>':''}).join("");
+ if(hList)rep+='<div class="panel"><b style="display:block;margin-bottom:6px">'+(isW?'Weekly':'Monthly')+' Hobby Breakdown</b><div class="jlog" style="border:0;padding:0;margin:0">'+hList+'</div></div>';
+ return'<h2>Calendar &amp; Reports</h2><p class="sub">Active date: <b>'+today()+'</b>. Inspect any day or compare weekly and monthly totals.</p>'+cal+rep;
 }
 
 function vCharter(){return'<h2>The Charter</h2><p class="sub">You are the Keeper of the Stronghold. Your daily upkeep carries you around the globe. Your hobbies build mastery.</p>'
@@ -371,7 +381,16 @@ function vCharter(){return'<h2>The Charter</h2><p class="sub">You are the Keeper
  +'<div class="foot"><button class="btn" data-a="tweaks">Customise Tasks</button><button class="btn" data-a="backup">Backup / Restore</button></div>'
  +'<div class="foot"><button class="btn" data-a="reset">Fresh day</button><button class="btn danger" data-a="wipe">Hard reset</button></div>'}
 
-function openModal(html){$("mb").innerHTML=html;$("modal").hidden=false}
+function openModal(html,trigger){
+ lastFocus=trigger||document.activeElement;
+ $("mb").innerHTML=html;$("modal").hidden=false;document.body.style.overflow="hidden";
+ var f=$("mb").querySelector("input,textarea,button");if(f)f.focus();
+}
+function closeModal(){
+ $("modal").hidden=true;document.body.style.overflow="";
+ if(lastFocus&&lastFocus.focus){lastFocus.focus();lastFocus=null}
+}
+
 function render(){var t=tierDef();document.documentElement.style.setProperty("--tier","var("+t.c+")");
  var lv=lvOf(S.km);$("lvl").textContent="Travel Rank "+lv+" \u00b7 "+lname(lv);$("xpf").style.width=lprog(S.km)*100+"%";
  $("mks").textContent=S.mks;$("kmv").textContent=nf(S.km)+" km";
@@ -379,13 +398,10 @@ function render(){var t=tierDef();document.documentElement.style.setProperty("--
  [["cm",S.mks],["ck",Math.round(S.km)]].forEach(function(q){if(prev[q[0]]!==undefined&&prev[q[0]]!==q[1]){var c=$(q[0]);c.classList.remove("bump");void c.offsetWidth;c.classList.add("bump")}prev[q[0]]=q[1]});
  var body={today:vToday,journey:vJourney,hobbies:vHobbies,skills:vSkills,reports:vReports,charter:vCharter}[V]();
  $("app").innerHTML=(V==="today"?'<p class="say">'+banner()+'</p>':'')+body;
- $("nav").innerHTML=[["today","Today"],["journey","Journey"],["hobbies","Hobbies"],["skills","Skills"],["reports","Calendar"]].map(function(n){return'<button data-a="view" data-id="'+n[0]+'"'+(V===n[0]?' aria-current="page"':'')+'>'+n[1]+'</button>'}).join("")
-  +'';
- // Add Charter access in Today/Reports or keep 5 tabs? Let's keep 5 tabs and put Charter link in Reports/HUD or make nav 6? 5 tabs is cleaner; let's add a Charter button at bottom of Calendar & Reports!
  if(V==="reports")$("app").innerHTML+='<div class="foot"><button class="btn" data-a="view" data-id="charter">View Stronghold Charter &amp; Settings</button></div>';
-}
+ $("nav").innerHTML=[["today","Today"],["journey","Journey"],["hobbies","Hobbies"],["skills","Skills"],["reports","Calendar"]].map(function(n){return'<button data-a="view" data-id="'+n[0]+'"'+(V===n[0]?' aria-current="page"':'')+'>'+n[1]+'</button>'}).join("")}
 
-function act(a,id,x){
+function act(a,id,x,el){
  if(a==="view"){V=id;render();window.scrollTo(0,0);return}
  if(a==="mute"){S.muted=!S.muted;save();render();return}
  if(a==="clrcel"){celeb="";render();return}
@@ -398,15 +414,17 @@ function act(a,id,x){
  else if(a==="rest"){beep("bell");say("Rest taken. No cost, no guilt.")}
  else if(a==="dice"){var pick=HOB[Math.floor(Math.random()*HOB.length)];S.fieldMood="Try "+pick.n+": "+objFor(pick,rk(pick.id));beep("knock");say("Rolled: "+pick.n)}
  else if(a==="wish"){if(S.wishlist[id])delete S.wishlist[id];else{S.wishlist[id]=1;beep("knock");say("Added "+STOPS[id].n+" to your wishlist.")}}
+ else if(a==="jumpcur"){var cur=where(S.km),leg=0;LS.forEach(function(s,l){if(cur>=s&&cur<=LE[l])leg=l});render();var det=$("leg-"+leg);if(det)det.open=true;var row=$("stop-"+cur);if(row)row.scrollIntoView({behavior:"smooth",block:"center"});return}
  else if(a==="stopinfo"){
-  var st=STOPS[id],ws=!!S.wishlist[id],nt=S.stopNotes[id]||"";
+  var st=STOPS[id],nt=S.stopNotes[id]||"";
   openModal('<h3>'+flag(st.c)+' '+st.n+'</h3><p>Distance from London: '+nf(CUM[id])+' km. '+(STOPS[+id+1]?'Next stretch: '+nf(st.d)+' km to '+STOPS[+id+1].n+'.':'Final stop!')+'</p>'
    +'<label style="display:block;font-size:13px;font-weight:800;margin-bottom:4px">Travel / Grand Prize Note</label>'
    +'<textarea class="inp" id="st-note" rows="3" placeholder="e.g. Boutique hotel, local food, or treat idea...">'+nt+'</textarea>'
-   +'<div class="row" style="margin-top:12px"><button class="btn" data-a="savestop" data-id="'+id+'">Save Note</button><button class="btn" data-a="cancel">Close</button></div>');
+   +'<div class="row" style="margin-top:12px"><button class="btn" data-a="savestop" data-id="'+id+'">Save Note</button><button class="btn" data-a="cancel">Close</button></div>',el);
   return;
  }
- else if(a==="savestop"){S.stopNotes[id]=$("st-note").value.trim();$("modal").hidden=true;say("Stop note saved.")}
+ else if(a==="savestop"){S.stopNotes[id]=$("st-note").value.trim();closeModal();say("Stop note saved.")}
+ else if(a==="wishfilt"){wishOnly=!wishOnly;render();return}
  else if(a==="hlog"){var m=+x;S.hlog.push({id:id,m:m});var dm=hob(id,m);say(dm>0?"+"+dm+" Mark"+(dm>1?"s":"")+". "+m+" minutes logged.":m+" minutes logged.")}
  else if(a==="hcust"){var m=Math.max(5,Math.min(300,+$("cm-"+id).value||20)),n=$("cn-"+id).value.trim();S.hlog.push({id:id,m:m,n:n});var dm=hob(id,m);say(dm>0?"+"+dm+" Mark. "+m+"m logged.":m+"m logged.")}
  else if(a==="hundo"){for(var i=S.hlog.length-1;i>=0;i--)if(S.hlog[i].id===id){var u=S.hlog[i].m;S.hlog.splice(i,1);hob(id,-u);break}}
@@ -417,22 +435,25 @@ function act(a,id,x){
  else if(a==="repmode"){repMode=id}
  else if(a==="tweaks"){
   var rows=DL(S.tier).map(function(d){return'<div style="margin-bottom:8px"><small style="font-weight:800">'+d.n+'</small><div style="display:flex;gap:6px"><input class="inp" id="tn-'+d.id+'" value="'+d.n+'"><input class="inp" style="width:80px" type="number" id="tm-'+d.id+'" value="'+d.m+'"></div></div>'}).join("");
-  openModal('<h3>Customise Tasks</h3><p>Rename tasks or adjust their minutes.</p>'+rows+'<div class="row"><button class="btn" data-a="savetweaks">Save</button><button class="btn" data-a="cancel">Cancel</button></div>');return;
+  openModal('<h3>Customise Tasks</h3><p>Rename tasks or adjust their minutes.</p>'+rows+'<div class="row"><button class="btn" data-a="savetweaks">Save</button><button class="btn" data-a="cancel">Cancel</button></div>',el);return;
  }
- else if(a==="savetweaks"){DL(S.tier).forEach(function(d){S.customDuties[d.id]={n:$("tn-"+d.id).value.trim()||d.n,m:Math.max(5,+$("tm-"+d.id).value||d.m)}});$("modal").hidden=true;say("Tasks updated.")}
+ else if(a==="savetweaks"){DL(S.tier).forEach(function(d){S.customDuties[d.id]={n:$("tn-"+d.id).value.trim()||d.n,m:Math.max(5,+$("tm-"+d.id).value||d.m)}});closeModal();say("Tasks updated.")}
  else if(a==="backup"){
-  openModal('<h3>Backup &amp; Restore</h3><p>Copy your save JSON or paste a backup to restore.</p><textarea class="inp" id="bk-txt" rows="5">'+JSON.stringify(S)+'</textarea><div class="row" style="margin-top:12px"><button class="btn" data-a="restore">Restore JSON</button><button class="btn" data-a="cancel">Close</button></div>');return;
+  var j=JSON.stringify(S);
+  openModal('<h3>Backup &amp; Restore</h3><p>Copy, download, or paste a JSON backup to restore.</p><textarea class="inp" id="bk-txt" rows="5">'+j+'</textarea><div class="row" style="margin-top:12px"><button class="btn" data-a="copybk">Copy</button><button class="btn" data-a="dlbk">Download</button><button class="btn" data-a="restore">Restore</button><button class="btn" data-a="cancel">Close</button></div>',el);return;
  }
- else if(a==="restore"){try{var obj=JSON.parse($("bk-txt").value);if(obj&&typeof obj.km==="number"){S=obj;$("modal").hidden=true;say("Backup restored!")}}catch(e){say("Invalid JSON backup.")}}
+ else if(a==="copybk"){if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText($("bk-txt").value).then(function(){say("Backup copied to clipboard.")},function(){say("Select and copy manually.")});else say("Select and copy manually.");return}
+ else if(a==="dlbk"){var blob=new Blob([$("bk-txt").value],{type:"application/json"}),url=URL.createObjectURL(blob),aEl=document.createElement("a");aEl.href=url;aEl.download="stronghold-backup-"+today()+".json";aEl.click();URL.revokeObjectURL(url);say("Backup downloaded.");return}
+ else if(a==="restore"){try{var obj=JSON.parse($("bk-txt").value);if(obj&&typeof obj.km==="number"){S=obj;closeModal();say("Backup restored!")}}catch(e){say("Invalid JSON backup.")}}
  else if(a==="reset"){S.done={};S.hlog=[];S.bonus=0;S.tkm=0}
- else if(a==="wipe"){openModal('<h3>Delete everything?</h3><p>This erases all Marks, kilometres, wishlist stops, skill progress and your Travel Rank. It cannot be undone.</p><div class="row"><button class="btn" id="mc" data-a="cancel">Keep progress</button><button class="btn danger" data-a="hardreset">Delete everything</button></div>');return}
- else if(a==="cancel"){$("modal").hidden=true;return}
- else if(a==="hardreset"){S=fresh();prev={};V="today";$("modal").hidden=true;say("Fresh start. Your adventure begins again.")}
+ else if(a==="wipe"){openModal('<h3>Delete everything?</h3><p>This erases all Marks, kilometres, wishlist stops, skill progress and your Travel Rank. It cannot be undone.</p><div class="row"><button class="btn" data-a="cancel">Keep progress</button><button class="btn danger" data-a="hardreset">Delete everything</button></div>',el);return}
+ else if(a==="cancel"){closeModal();return}
+ else if(a==="hardreset"){S=fresh();prev={};V="today";closeModal();say("Fresh start. Your adventure begins again.")}
  save();render();if(up)say(up);if(fx||up)burst();fx=0;up=""}
 
-document.addEventListener("click",function(e){var t=e.target.closest("[data-a]");if(t&&!t.disabled&&t.tagName!=="SELECT")act(t.dataset.a,t.dataset.id,t.dataset.m)});
+document.addEventListener("click",function(e){var t=e.target.closest("[data-a]");if(t&&!t.disabled&&t.tagName!=="SELECT")act(t.dataset.a,t.dataset.id,t.dataset.m,t)});
 document.addEventListener("change",function(e){if(e.target&&e.target.id==="gp-sel"){S.grandPick=e.target.value;save();render()}});
-document.addEventListener("keydown",function(e){if(e.key==="Escape")$("modal").hidden=true});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!$("modal").hidden)closeModal()});
 setInterval(function(){if(V==="today"){var s=document.querySelector(".say");if(s)s.textContent=banner()}},60000);
 render();
 })();
