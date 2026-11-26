@@ -254,10 +254,29 @@ p.clue b{color:var(--ink)}
 .ppseg{display:grid!important;grid-template-columns:repeat(3,1fr);gap:8px}.seg2{display:grid!important;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
 .foot{display:grid;grid-template-columns:1fr 1fr;gap:10px}.foot>.btn{width:100%;min-height:52px}.row>.btn{flex:1 1 0;min-width:0}
 #app>h2:first-child{margin-top:18px}.tl{opacity:.85}
+
+html[data-quiet="on"] body{background:var(--bg)!important}
+html[data-quiet="on"] .hud{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--bg)}
+html[data-quiet="on"] .nav{backdrop-filter:none;-webkit-backdrop-filter:none}
+html[data-quiet="on"] .hero::before,html[data-quiet="on"] .vin .hero::after,html[data-quiet="on"] .cover::before{display:none!important}
+html[data-quiet="on"] .spk,.stampfx,.floater{display:none!important}
+html[data-quiet="on"] .card,.panel{box-shadow:none}
+html[data-focus="on"] .nav button:not([aria-current=page]):not([data-id=hobbies]):not([data-id=today]):not([data-id=charter]){opacity:.35}
+html[data-focus="on"] .say{font-size:16px}
+html[data-focus="on"] .start{min-height:76px;border-width:3px}
+html[data-focus="on"] .list .card:not(.done){border-width:2px}
+.quiet-banner{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;margin:0 0 12px;border-radius:14px;background:color-mix(in srgb,var(--gem) 10%,var(--surf));border:1px solid color-mix(in srgb,var(--gem) 30%,var(--line));font-size:13px;font-weight:700}
+.next-block{margin:0 0 14px;padding:16px;border-radius:18px;background:color-mix(in srgb,var(--tier) 12%,var(--surf));border:2px solid var(--tier)}
+.next-block small{display:block;font-weight:800;letter-spacing:.04em;color:var(--mute);margin-bottom:4px}
+.next-block b{display:block;font:700 20px/1.25 var(--head);margin-bottom:6px}
+.next-block .why{font-size:14px;color:var(--mute);margin:0 0 10px}
+.red-safe{padding:12px 14px;border-radius:14px;background:color-mix(in srgb,var(--red) 8%,var(--surf));border-left:4px solid var(--red);margin:0 0 12px;font-size:14px}
+.red-safe b{display:block;margin-bottom:2px}
+
 </style>
 </head>
 <body>
-<header class="hud"><div class="who" id="lvl"></div><div class="xpbar"><i id="xpf"></i></div><div class="chips"><button class="mute-btn" data-a="view" data-id="settings" aria-label="Settings"><svg class="ni" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg></button><button class="mute-btn" id="mbtn" data-a="mute" title="Toggle sound">&#128266;</button><span class="chip mk" id="cm"><i></i><b id="mks">0</b></span><span class="chip km" id="ck"><i></i><b id="kmv">0 km</b></span></div></header>
+<header class="hud"><div class="who" id="lvl"></div><div class="xpbar"><i id="xpf"></i></div><div class="chips"><button class="mute-btn" data-a="view" data-id="settings" aria-label="Settings"><svg class="ni" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg></button><button class="mute-btn" data-a="focusmode" aria-label="Focus mode" title="Focus mode"><svg class="ni" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2"/></svg></button><button class="mute-btn" id="mbtn" data-a="mute" title="Toggle sound">&#128266;</button><span class="chip mk" id="cm"><i></i><b id="mks">0</b></span><span class="chip km" id="ck"><i></i><b id="kmv">0 km</b></span></div></header>
 <main id="app"></main>
 <nav class="nav" id="nav" aria-label="Main"></nav>
 <div class="toast" id="toast" hidden role="status"></div>
@@ -271,10 +290,10 @@ function fmtKey(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getD
 function parseKey(s){var p=s.split("-").map(Number);return new Date(p[0],p[1]-1,p[2])}
 function today(){return fmtKey(new Date())}
 function wk(){return[0,6].indexOf(new Date().getDay())>-1}
-function fresh(){return{day:today(),tier:"green",convoy:false,done:{},tkm:0,mks:0,km:0,bonus:0,hlog:[],xp:{},claimed:{},wishlist:{},stopNotes:{},grandPick:"",off:wk(),muted:false,hist:{},customDuties:{},fieldMood:"",timer:null,custom:null,cfg:null,theme:"auto",lastBackup:0}}
-var S=fresh(),V="today",prev={},fx=0,up="",celeb="",repMode="week",calDate=new Date(),selDay=today(),wishOnly=false,lastFocus=null,openLegs={},stampTxt="",pcQ=null,legQ=-1,lay=null,gRot=0,gBase=0,mxOpen=false,ppTab="stamps",cbTab="case",pcName="",gTilt=.31,gSway=0,gPin=[0,0],lgS=-1,hbTab="track";
+function fresh(){return{day:today(),tier:"green",convoy:false,done:{},tkm:0,mks:0,km:0,bonus:0,hlog:[],xp:{},claimed:{},wishlist:{},stopNotes:{},grandPick:"",off:wk(),muted:false,hist:{},customDuties:{},fieldMood:"",timer:null,custom:null,cfg:null,theme:"auto",lastBackup:0,streak:0,streakBest:0,lastHobbyDay:"",graceUsed:false,wins:{},branch:{},deepSessions:0,focusMode:false,quiet:false,tierSet:false}}
+var S=fresh(),V="today",prev={},fx=0,up="",celeb="",repMode="week",calDate=new Date(),selDay=today(),wishOnly=false,lastFocus=null,openLegs={},stampTxt="",pcQ=null,legQ=-1,lay=null,gRot=0,gBase=0,mxOpen=false,ppTab="stamps",cbTab="case",pcName="",gTilt=.31,gSway=0,gPin=[0,0],lgS=-1,hbTab="track",hbId=null;
 try{var p=JSON.parse(localStorage.getItem(KEY)||"null");if(p)for(var k in p)S[k]=p[k]}catch(e){}
-function norm(){["done","xp","claimed","wishlist","stopNotes","hist","customDuties"].forEach(function(k){if(!S[k])S[k]={}});
+function norm(){["done","xp","claimed","wishlist","stopNotes","hist","customDuties","wins","branch"].forEach(function(k){if(!S[k])S[k]={}});S.streak=S.streak||0;S.streakBest=S.streakBest||0;S.lastHobbyDay=S.lastHobbyDay||"";S.graceUsed=!!S.graceUsed;S.deepSessions=S.deepSessions||0;S.focusMode=!!S.focusMode;S.quiet=!!S.quiet;S.tierSet=!!S.tierSet;
 if(!S.hlog||!S.hlog.push)S.hlog=[];S.km=S.km||0;S.tkm=S.tkm||0;S.bonus=S.bonus||0;S.mks=S.mks||0;S.grandPick=S.grandPick||"";S.muted=!!S.muted;S.lastBackup=S.lastBackup||0;S.cards=S.cards||{};S.fa=S.fa||{};S.chap=S.chap||{};S.pz=S.pz||{};S.pzh=S.pzh||{};S.wp=S.wp||{};S.wph=S.wph||{};S.own=S.own||{};S.spent=S.spent||0;S.covers=S.covers||{0:1}}norm();
 
 function syncHist(){
@@ -306,41 +325,122 @@ function DL(t){return DUTIES[t].map(function(d){var base=S.off&&OFF[d.id]?OFF[d.
 function K(m){return Math.round(m*1.5)}
 
 var HOB=[
- {id:"music",e:"&#127929;",n:"Music Production",d:"Maschine 3 and MiniFreak.",c:"#7b5ea7",diff:"High",likely:"Steady (Long-term)",pace:"3-4h / wk",scale:"1m: Loop · 6m: EP · 2y: Live Set",obj:[
-  "Route Maschine 3 audio & build a 4-bar drum loop",
-  "Design 3 custom MiniFreak patches & save a template",
-  "Arrange a full 2-minute track with intro, drop & outro",
-  "Perform a live 15-minute hardware jam without stopping"
+ {id:"music",e:"&#127929;",n:"Music Production",d:"Maschine 3 and MiniFreak. Dreamy indie electronica.",c:"#7b5ea7",diff:"High",likely:"Steady (Long-term)",pace:"3-4h / wk",scale:"3m: First loops · 6m: Sketches · 12m: Finished tracks",obj:[
+  {d:"Beginner",h:1,t:"Set up Live so Maschine + MiniFreak both work (MIDI & audio)",link:"https://remotify.io/ableton-controllers/native-instruments-maschine-ableton/"},
+  {d:"Beginner",h:3,t:"Make a 1-bar Drum Rack pattern (kick, snare, hi-hat only)",link:"https://www.youtube.com/watch?v=2kg0wzKC1jI"},
+  {d:"Beginner",h:6,t:"Record a live 2-bar beat from the Maschine pads",link:"https://www.youtube.com/watch?v=2kg0wzKC1jI"},
+  {d:"Beginner",h:9,t:"Add swing and humanise velocities",link:"https://www.ableton.com/en/manual/editing-midi/"},
+  {d:"Beginner",h:12,t:"Record a simple root-note bass line on the MiniFreak",link:"https://www.youtube.com/watch?v=jOOWN2Yw58M"},
+  {d:"Beginner",h:16,t:"Build a first 16-bar loop (drums → bass → chords)",link:"https://www.youtube.com/watch?v=gODmG3yqGbo"},
+  {d:"Beginner",h:22,t:"Duplicate and vary the loop, mute sections for interest",link:"https://www.ableton.com/en/manual/session-view/"},
+  {d:"Intermediate",h:28,t:"Write a 4-note melody in Scale Mode (A minor)",link:"https://www.ableton.com/en/manual/editing-midi/"},
+  {d:"Intermediate",h:35,t:"Create a dreamy 4-chord progression (i–VI–III–VII)",link:"https://www.youtube.com/watch?v=jOOWN2Yw58M"},
+  {d:"Intermediate",h:42,t:"Write a 2-bar motif and make three variations",link:"https://www.ableton.com/en/manual/midi-tools/"},
+  {d:"Intermediate",h:50,t:"Do four 15-minute sketches and pick one seed",link:"https://www.youtube.com/watch?v=gODmG3yqGbo"},
+  {d:"Intermediate",h:60,t:"Build a bass and a pluck from the MiniFreak Init patch",link:"https://www.arturia.com/products/hardware-synths/minifreak/overview"},
+  {d:"Intermediate",h:72,t:"Make a soft pad with slow attack + LFO movement",link:"https://www.arturia.com/products/hardware-synths/minifreak/overview"},
+  {d:"Intermediate",h:85,t:"Record an arp and automate a filter sweep",link:"https://www.ableton.com/en/manual/automation/"},
+  {d:"Intermediate",h:100,t:"Chop a short vocal or sample in Maschine / Simpler",link:"https://www.native-instruments.com/en/products/maschine/production-systems/maschine/"},
+  {d:"Advanced",h:115,t:"Balance levels, high-pass and basic EQ on the seed",link:"https://www.ableton.com/en/manual/live-audio-effect-reference/"},
+  {d:"Advanced",h:130,t:"Add reverb + delay returns and light sidechain",link:"https://www.ableton.com/en/manual/mixing/"},
+  {d:"Advanced",h:150,t:"Arrange a 2–3 minute track with intro / main / break / outro",link:"https://www.ableton.com/en/manual/arrangement-view/"},
+  {d:"Advanced",h:170,t:"Final mix pass and export a 24-bit WAV",link:"https://www.ableton.com/en/manual/exporting/"},
+  {d:"Advanced",h:190,t:"Perform a 10-minute hardware jam without stopping",link:null},
+  {d:"Advanced",h:200,t:"Finish a second track from a new seed using your template",link:null}
  ]},
- {id:"origami",e:"&#129419;",n:"Origami",d:"Geometric folds and wildlife models.",c:"#c2543a",diff:"Moderate",likely:"High (At own pace)",pace:"1-2h / wk",scale:"1m: Bases · 6m: Wet-fold · 1y: Diorama",obj:[
-  "Master crisp valley/mountain folds & preliminary bases",
-  "Complete 3 intermediate animals from single uncut squares",
-  "Shape a realistic giraffe or wildlife model using wet-folding",
-  "Build a multi-piece framed wildlife diorama"
+ {id:"origami",e:"&#129419;",n:"Origami",d:"Geometric folds and wildlife models.",c:"#c2543a",diff:"Moderate",likely:"High (At own pace)",pace:"1-2h / wk",scale:"3m: Clean bases · 6m: Wet-fold · 12m: Diorama",obj:[
+  {d:"Beginner",h:1,t:"Master valley, mountain, squash, petal and preliminary bases",link:"https://origami.me/origami-animals/"},
+  {d:"Beginner",h:3,t:"Fold 4 classic easy animals cleanly (crane, frog, fox, cat)",link:"https://www.youtube.com/playlist?list=PLcKyZevpil3kDpF3uS5kvPpHtAQpyoefo"},
+  {d:"Beginner",h:6,t:"Fold 4 more intermediate animals with sharp creases",link:"https://origami.me/origami-animals/"},
+  {d:"Beginner",h:10,t:"Achieve consistent results on 15–20 cm paper",link:"https://origamiok.com/easy-origami/"},
+  {d:"Beginner",h:14,t:"Make a small set of 4 related models that look cohesive",link:"https://origami.me/origami-animals/"},
+  {d:"Intermediate",h:20,t:"Learn basic wet-folding on thicker paper",link:"https://origami.me/"},
+  {d:"Intermediate",h:28,t:"Fold 2 realistic animals using wet-folding",link:"https://www.youtube.com/playlist?list=PLcKyZevpil3kDpF3uS5kvPpHtAQpyoefo"},
+  {d:"Intermediate",h:36,t:"Control stretch and drying so forms hold shape",link:"https://origami.me/"},
+  {d:"Intermediate",h:45,t:"Create a small display group of 3–5 pieces at consistent scale",link:null},
+  {d:"Intermediate",h:55,t:"Modify an existing model (proportions or simple details)",link:null},
+  {d:"Intermediate",h:65,t:"Fold a multi-piece model that needs assembly",link:"https://origami.me/origami-animals/"},
+  {d:"Intermediate",h:78,t:"Work with 3 different paper types and note what each suits",link:"https://origami.me/"},
+  {d:"Advanced",h:95,t:"Complete one intermediate original or heavily modified design",link:null},
+  {d:"Advanced",h:115,t:"Build a small framed diorama or scene",link:null},
+  {d:"Advanced",h:135,t:"Teach 2–3 models clearly to another person",link:null},
+  {d:"Advanced",h:155,t:"Photograph and document your own folding sequence",link:null},
+  {d:"Advanced",h:175,t:"Produce a small body of work (8–12 pieces) in your style",link:null},
+  {d:"Advanced",h:200,t:"Design and fold a personal signature model",link:null}
  ]},
- {id:"play",e:"&#127918;",n:"PlayStation",d:"Red Dead 2 or Unrailed! with Georgie.",c:"#2f7d9a",diff:"Low (Co-op)",likely:"Very High",pace:"2-3h / wk",scale:"1m: Groove · 3m: Campaign · 1y: 100%",obj:[
-  "Settle in for a relaxed co-op session with zero pressure",
-  "Coordinate smooth track-building streaks in Unrailed!",
-  "Complete a major story chapter or co-op campaign together",
-  "Master a favourite co-op world or 100% a shared favourite"
+ {id:"play",e:"&#127918;",n:"PlayStation",d:"Red Dead 2 or Unrailed! with Georgie.",c:"#2f7d9a",diff:"Low (Co-op)",likely:"Very High",pace:"2-3h / wk",scale:"3m: Comfortable sessions · 6m: Campaign · 12m: Mastery",obj:[
+  {d:"Beginner",h:2,t:"Agree simple session rules (no pressure, communication, pauses)",link:null},
+  {d:"Beginner",h:6,t:"Finish the early chapters / first major area together",link:null},
+  {d:"Beginner",h:12,t:"Develop clear call-outs and basic role division",link:null},
+  {d:"Beginner",h:18,t:"Complete one full co-op campaign chapter without frustration",link:null},
+  {d:"Beginner",h:25,t:"Build a reliable session rhythm you both look forward to",link:null},
+  {d:"Intermediate",h:35,t:"Finish a substantial mid-game story arc together",link:null},
+  {d:"Intermediate",h:45,t:"Create a few personal house rules or preferred styles",link:null},
+  {d:"Intermediate",h:55,t:"Reach the point where sessions feel easy and fun",link:null},
+  {d:"Intermediate",h:70,t:"Tackle higher-difficulty content or optional challenges",link:null},
+  {d:"Intermediate",h:85,t:"Get strong mechanical competence in the game systems",link:null},
+  {d:"Intermediate",h:100,t:"Complete a major late-game section or difficult objective",link:null},
+  {d:"Advanced",h:120,t:"Recover smoothly from failure without tilting",link:null},
+  {d:"Advanced",h:140,t:"100% (or near) a shared favourite title / world",link:null},
+  {d:"Advanced",h:160,t:"Design or host a custom challenge / modified ruleset",link:null},
+  {d:"Advanced",h:180,t:"Teach the game systems clearly to a third person",link:null},
+  {d:"Advanced",h:200,t:"Have a recognisable shared style and favourite moments list",link:null}
  ]},
- {id:"sail",e:"&#9973;",n:"Dinghy Sailing",d:"Hawley Lake. Back ashore before 2 PM.",c:"#2a6fb0",diff:"High (Weather)",likely:"Moderate (Window)",pace:"2h / wk",scale:"1m: Rigging · 6m: Tacks · 1y: Solo Helm",obj:[
-  "Rig a centre-main dinghy (RS Zest) & launch smoothly",
-  "Link clean tacks and gybes without losing boat speed",
-  "Read wind shifts, trim sails & handle a controlled capsize",
-  "Sail a full lake course confidently solo before 2 PM"
+ {id:"sail",e:"&#9973;",n:"Dinghy Sailing",d:"Hawley Lake. Back ashore before 2 PM.",c:"#2a6fb0",diff:"High (Weather)",likely:"Moderate (Window)",pace:"2h / wk",scale:"3m: Rig & launch · 6m: Tacks · 12m: Solo helm",obj:[
+  {d:"Beginner",h:2,t:"Rig a centre-main dinghy (RS Zest) correctly and launch",link:"https://www.youtube.com/watch?v=77djAHbz4p8"},
+  {d:"Beginner",h:5,t:"Sail a simple triangular course in light wind with balance",link:"https://www.youtube.com/watch?v=77djAHbz4p8"},
+  {d:"Beginner",h:9,t:"Perform clean tacks and return to shore under control",link:"https://www.sailingacademy.co.za/sailing-tips/15-perfecting-your-tacks-gybes/"},
+  {d:"Beginner",h:14,t:"Capsize and recover the boat confidently (right + re-board)",link:"https://www.youtube.com/watch?v=5zF3oSqZnOo"},
+  {d:"Beginner",h:20,t:"Link multiple clean tacks while keeping boat speed",link:"https://www.sailingacademy.co.za/sailing-tips/15-perfecting-your-tacks-gybes/"},
+  {d:"Intermediate",h:28,t:"Link clean gybes without losing control",link:"https://www.sailingacademy.co.za/sailing-tips/15-perfecting-your-tacks-gybes/"},
+  {d:"Intermediate",h:36,t:"Read basic wind shifts and adjust course",link:"https://www.youtube.com/watch?v=77djAHbz4p8"},
+  {d:"Intermediate",h:45,t:"Sail the full lake circuit in moderate conditions",link:null},
+  {d:"Intermediate",h:55,t:"Treat a controlled capsize as a normal part of the session",link:"https://www.youtube.com/watch?v=5zF3oSqZnOo"},
+  {d:"Intermediate",h:70,t:"Sail confidently in fresher wind with proper depowering",link:null},
+  {d:"Intermediate",h:85,t:"Make precise approaches to a mark or pontoon",link:null},
+  {d:"Advanced",h:100,t:"Sail the course solo with consistent technique",link:null},
+  {d:"Advanced",h:120,t:"Develop personal boat-setup preferences (kicker, outhaul)",link:null},
+  {d:"Advanced",h:140,t:"Sail a full lake course solo before 2 pm in varied conditions",link:null},
+  {d:"Advanced",h:160,t:"Teach basic rigging and launching to another person",link:null},
+  {d:"Advanced",h:180,t:"Time yourself around a set course and improve",link:null},
+  {d:"Advanced",h:200,t:"Have a reliable system for boat care, tuning and decisions",link:null}
  ]},
- {id:"boulder",e:"&#129495;",n:"Bouldering",d:"Evening sessions, after 5 PM.",c:"#8a6d3b",diff:"High (Physical)",likely:"Steady (Evening)",pace:"2-3h / wk",scale:"1m: V1 · 6m: V2-V3 · 2y: Overhangs",obj:[
-  "Climb V0-V1 routes focusing on quiet feet & straight arms",
-  "Use flagging, heel hooks & hip-to-wall balance on V2s",
-  "Read sequences from the mat & send 3+ V3 problems",
-  "Climb overhangs & technical slabs with controlled power"
+ {id:"boulder",e:"&#129495;",n:"Bouldering",d:"Evening sessions, after 5 PM.",c:"#8a6d3b",diff:"High (Physical)",likely:"Steady (Evening)",pace:"2-3h / wk",scale:"3m: V0–V1 · 6m: V2–V3 · 12m: Projects",obj:[
+  {d:"Beginner",h:2,t:"Climb V0–V1 consistently with quiet feet and straight arms",link:"https://www.youtube.com/watch?v=6ybn3GangdM"},
+  {d:"Beginner",h:5,t:"Learn basic body positions (drop knee, flagging, hip-to-wall)",link:"https://www.youtube.com/watch?v=nOkv9uFHojU"},
+  {d:"Beginner",h:9,t:"Complete 8–10 different V0–V1 problems without thrashing",link:"https://www.youtube.com/watch?v=6ybn3GangdM"},
+  {d:"Beginner",h:14,t:"Develop a simple warm-up and cool-down you actually follow",link:null},
+  {d:"Beginner",h:20,t:"Project and send your first few V2 problems",link:"https://www.youtube.com/watch?v=6ybn3GangdM"},
+  {d:"Intermediate",h:28,t:"Read sequences from the ground before pulling on",link:null},
+  {d:"Intermediate",h:36,t:"Use heel hooks and basic dynamic movement when needed",link:"https://www.climbing.com/skills/rock-climbing-how-to-heel-hook/"},
+  {d:"Intermediate",h:45,t:"Build a personal benchmark circuit of problems",link:null},
+  {d:"Intermediate",h:55,t:"Send several V2s with controlled, efficient movement",link:"https://www.youtube.com/watch?v=6ybn3GangdM"},
+  {d:"Intermediate",h:70,t:"Send your first V3 problems",link:"https://www.youtube.com/watch?v=6ybn3GangdM"},
+  {d:"Intermediate",h:85,t:"Improve recovery and session structure (work:rest)",link:null},
+  {d:"Advanced",h:100,t:"Climb both overhangs and technical slabs with good style",link:null},
+  {d:"Advanced",h:120,t:"Identify and work on one personal weakness",link:null},
+  {d:"Advanced",h:140,t:"Project and eventually send a meaningful personal project",link:null},
+  {d:"Advanced",h:160,t:"Climb a full varied session with good energy management",link:null},
+  {d:"Advanced",h:180,t:"Give useful beta and spot safely",link:null},
+  {d:"Advanced",h:200,t:"Have a sustainable approach and a body of sent problems",link:null}
  ]},
- {id:"build",e:"&#129690;",n:"Games Room Build",d:"Framing, carpentry and decor.",c:"#5f8a2e",diff:"Moderate-High",likely:"High (Project)",pace:"3h / wk",scale:"1m: Frame · 3m: Table · 6m: Room Done",obj:[
-  "Measure, square & frame the 3-sided banquette seating",
-  "Build the 900mm gaming table & fit the hidden mini-fridge",
-  "Finish the upturned barrel table, shelving & sheepskin trim",
-  "Wire warm ambient lighting & hang the games room sign"
+ {id:"build",e:"&#129690;",n:"Games Room Build",d:"Framing, carpentry and decor.",c:"#5f8a2e",diff:"Moderate-High",likely:"High (Project)",pace:"3h / wk",scale:"3m: Framing · 6m: Furniture · 12m: Finished room",obj:[
+  {d:"Beginner",h:3,t:"Accurately measure, square and frame the 3-sided banquette",link:null},
+  {d:"Beginner",h:8,t:"Complete all structural framing to a solid, level standard",link:null},
+  {d:"Beginner",h:14,t:"Install basic support for the gaming table and mini-fridge",link:null},
+  {d:"Beginner",h:20,t:"Have a clear, dimensioned plan for the remaining elements",link:null},
+  {d:"Beginner",h:28,t:"Build and fit the 900 mm gaming table",link:null},
+  {d:"Intermediate",h:38,t:"Integrate the hidden mini-fridge cleanly",link:null},
+  {d:"Intermediate",h:48,t:"Complete the upturned barrel table and basic shelving",link:null},
+  {d:"Intermediate",h:60,t:"Reach a functional usable state even if unfinished",link:null},
+  {d:"Intermediate",h:75,t:"Finish all carpentry surfaces to a good standard",link:null},
+  {d:"Intermediate",h:90,t:"Install warm ambient lighting and any required wiring",link:null},
+  {d:"Intermediate",h:110,t:"Add sheepskin trim, soft furnishings and decorative details",link:null},
+  {d:"Advanced",h:130,t:"Hang the games room sign and complete visual identity",link:null},
+  {d:"Advanced",h:150,t:"Live with the room and make small refinements from real use",link:null},
+  {d:"Advanced",h:170,t:"Document the build (photos + notes) so the process is clear",link:null},
+  {d:"Advanced",h:185,t:"Add any final systems or storage that improve daily function",link:null},
+  {d:"Advanced",h:200,t:"Treat the finished room as a complete personal project",link:null}
  ]}
 ];
 var RW=[
@@ -384,7 +484,7 @@ function coverHtml(){var c=S.cfg||{};return'<div class="cover"><svg class="ni" v
 function addPack(k){var c=chCollect();if(c.hob.length===1&&c.hob[0].id==="h-first"&&c.hob[0].n==="My first hobby")c.hob=[];if(c.rw.length===2&&c.rw[0][2]==="My first reward")c.rw=GRW.map(function(q){return[q[0],"&#"+q[1]+";",q[2]]});PACKS[k][1].forEach(function(h){if(!c.hob.some(function(x){return x.id===h.id}))c.hob.push(JSON.parse(JSON.stringify(h)))});applyCustom()}
 var ICL={127929:"Keys",129419:"Folding",127918:"Gaming",9973:"Sailing",129495:"Climbing",129690:"Making",127922:"Games",128296:"Tools",127793:"Growing",127925:"Music",128062:"Animals",127757:"Travel",127942:"Trophy",127869:"Food",129494:"Wellness",129510:"Spa",128203:"Study",127968:"Home",127962:"House",128273:"Puzzle",127748:"Outdoors",128736:"Workshop"};
 function icSel(id,cur){var cp=(String(cur).match(/\d+/)||["0"])[0];return'<select class="inp" id="'+id+'" aria-label="Icon">'+Object.keys(ICL).map(function(k){return'<option value="'+k+'"'+(k===cp?" selected":"")+'>'+ICL[k]+'</option>'}).join("")+'</select>'}
-function vCustom(){var c=S.custom||{hob:HOB,rw:RW,rn:RN,master:200};return'<h2>Customise</h2><p class="sub">Edit your hobbies, skill ranks and rewards. Saved on this device and included in backups.</p><div class="row"><button class="btn" data-a="chsave">Save changes</button><button class="btn" data-a="view" data-id="charter">Back</button></div><h2>Hobbies</h2>'+c.hob.map(function(a,i){return'<div class="panel" style="--c:'+esc(a.c)+'"><label class="fl2">Name<input class="inp" id="ch-n-'+i+'" value="'+esc(a.n)+'"></label><label class="fl2">Description<input class="inp" id="ch-d-'+i+'" value="'+esc(a.d)+'"></label><div class="row"><label class="fl2">Icon'+icSel("ch-e-"+i,a.e)+'</label><label class="fl2">Colour<input type="color" id="ch-c-'+i+'" value="'+esc(a.c)+'" aria-label="Colour"></label></div><label class="fl2">Weekly pace<input class="inp" id="ch-p-'+i+'" value="'+esc(a.pace)+'"></label><label class="fl2">Four milestones, one per line<textarea class="inp" id="ch-o-'+i+'" rows="4">'+esc(a.obj.join("\n"))+'</textarea></label><button class="link" data-a="chdel" data-id="'+i+'">Remove hobby</button></div>'}).join("")+'<div class="row" style="margin-top:12px"><button class="btn" data-a="chadd">Add a hobby</button></div><div class="row" style="margin-top:8px"><label class="fl2">Add hobbies from a starter pack<select class="inp" id="ch-pack">'+packOpts()+'</select></label><button class="btn" data-a="packadd">Add pack</button></div><h2>Skill ranks</h2><label class="fl2">Hours to reach Master<input class="inp" type="number" min="10" max="2000" id="ch-m" value="'+c.master+'"></label><div class="panel">'+c.rn.map(function(n,i){return'<label class="fl2">Rank '+(i+1)+'<input class="inp" id="ch-r-'+i+'" value="'+esc(n)+'"></label>'}).join("")+'</div><h2>Rewards</h2><p class="sub">Each unlocks at its Stamp count. The last one is the Grand Prize.</p>'+c.rw.map(function(r,i){return'<div class="panel"><div class="row"><label class="fl2">Stamps<input class="inp" type="number" min="1" id="ch-t-'+i+'" value="'+r[0]+'"></label><label class="fl2">Icon'+icSel("ch-i-"+i,r[1])+'</label></div><label class="fl2">Reward<input class="inp" id="ch-w-'+i+'" value="'+esc(r[2])+'"></label><button class="link" data-a="rwdel" data-id="'+i+'">Remove reward</button></div>'}).join("")+'<div class="row" style="margin-top:12px"><button class="btn" data-a="rwadd">Add a reward</button></div><div class="row" style="margin:16px 0"><button class="btn" data-a="chsave">Save changes</button><button class="btn" data-a="chblank">Start blank</button><button class="btn danger" data-a="chreset">Restore defaults</button></div>'}
+function vCustom(){var c=S.custom||{hob:HOB,rw:RW,rn:RN,master:200};return'<h2>Customise</h2><p class="sub">Edit your hobbies, skill ranks and rewards. Saved on this device and included in backups.</p><div class="row"><button class="btn" data-a="chsave">Save changes</button><button class="btn" data-a="view" data-id="charter">Back</button></div><h2>Hobbies</h2>'+c.hob.map(function(a,i){return'<div class="panel" style="--c:'+esc(a.c)+'"><label class="fl2">Name<input class="inp" id="ch-n-'+i+'" value="'+esc(a.n)+'"></label><label class="fl2">Description<input class="inp" id="ch-d-'+i+'" value="'+esc(a.d)+'"></label><div class="row"><label class="fl2">Icon'+icSel("ch-e-"+i,a.e)+'</label><label class="fl2">Colour<input type="color" id="ch-c-'+i+'" value="'+esc(a.c)+'" aria-label="Colour"></label></div><label class="fl2">Weekly pace<input class="inp" id="ch-p-'+i+'" value="'+esc(a.pace)+'"></label><label class="fl2">Four milestones, one per line<textarea class="inp" id="ch-o-'+i+'" rows="4">'+esc(a.obj.map(function(o){return typeof o==="string"?o:(o.d+" · "+o.h+"h · "+o.t)}).join("\n"))+'</textarea></label><button class="link" data-a="chdel" data-id="'+i+'">Remove hobby</button></div>'}).join("")+'<div class="row" style="margin-top:12px"><button class="btn" data-a="chadd">Add a hobby</button></div><div class="row" style="margin-top:8px"><label class="fl2">Add hobbies from a starter pack<select class="inp" id="ch-pack">'+packOpts()+'</select></label><button class="btn" data-a="packadd">Add pack</button></div><h2>Skill ranks</h2><label class="fl2">Hours to reach Master<input class="inp" type="number" min="10" max="2000" id="ch-m" value="'+c.master+'"></label><div class="panel">'+c.rn.map(function(n,i){return'<label class="fl2">Rank '+(i+1)+'<input class="inp" id="ch-r-'+i+'" value="'+esc(n)+'"></label>'}).join("")+'</div><h2>Rewards</h2><p class="sub">Each unlocks at its Stamp count. The last one is the Grand Prize.</p>'+c.rw.map(function(r,i){return'<div class="panel"><div class="row"><label class="fl2">Stamps<input class="inp" type="number" min="1" id="ch-t-'+i+'" value="'+r[0]+'"></label><label class="fl2">Icon'+icSel("ch-i-"+i,r[1])+'</label></div><label class="fl2">Reward<input class="inp" id="ch-w-'+i+'" value="'+esc(r[2])+'"></label><button class="link" data-a="rwdel" data-id="'+i+'">Remove reward</button></div>'}).join("")+'<div class="row" style="margin-top:12px"><button class="btn" data-a="rwadd">Add a reward</button></div><div class="row" style="margin:16px 0"><button class="btn" data-a="chsave">Save changes</button><button class="btn" data-a="chblank">Start blank</button><button class="btn danger" data-a="chreset">Restore defaults</button></div>'}
 function chCollect(){var c=S.custom||(S.custom={hob:JSON.parse(JSON.stringify(HOB)),rw:JSON.parse(JSON.stringify(RW)),rn:RN.slice(),master:200}),g=function(i){var e=$(i);return e?e.value:null};
 c.fixed=true;c.hob.forEach(function(a,i){if(g("ch-n-"+i)===null)return;a.n=g("ch-n-"+i).trim()||a.n;a.d=g("ch-d-"+i).trim();a.e="&#"+g("ch-e-"+i)+";";a.c=g("ch-c-"+i);a.pace=g("ch-p-"+i).trim()||"Your pace";var o=g("ch-o-"+i).split("\n").map(function(x){return x.trim()}).filter(Boolean);while(o.length<4)o.push(o.length?o[o.length-1]:"Keep showing up");a.obj=o.slice(0,4)});
 if(g("ch-m")!==null)c.master=Math.max(10,Math.min(2000,+g("ch-m")||200));c.rn=c.rn.map(function(n,i){var v=g("ch-r-"+i);return v&&v.trim()?v.trim():n});
@@ -429,7 +529,17 @@ function rk(id){var x=S.xp[id]||0,n=0;TH.forEach(function(t){if(x>=t)n++});retur
 function hm(x){return Math.floor(x/60)+"h "+x%60+"m"}
 function nf(x){return Math.round(x).toLocaleString("en-GB")}
 function addKm(n){var o=S.km,b=lvOf(o),m="";S.km=Math.max(0,o+n);S.tkm=Math.max(0,S.tkm+n);if(n>0){STOPS.forEach(function(q,j){if(j>0&&CUM[j]>o&&CUM[j]<=S.km){m="Arrived in "+q.n+"! "+flag(q.c);stampTxt=flag(q.c)+" "+q.n;pcQ=q;if(!S.cards[q.n])S.cards[q.n]={d:today(),note:""};legQ=LE.indexOf(j);lgS=LS.indexOf(j);celeb="Arrived in "+flag(q.c)+" "+q.n+"!"+(S.wishlist[j]?" (Wishlist Stop!)":"")}});var a=lvOf(S.km);if(a>b){m=(m?m+" ":"")+"Rank up! Travel Rank "+a+": "+lname(a)+".";celeb="Travel Rank "+a+": "+lname(a)+"!"}if(m)up=m}}
-function hob(id,m){var o=S.xp[id]||0,b=rk(id),w=Math.max(0,o+m);S.xp[id]=w;var d=Math.floor(w/60)-Math.floor(o/60);S.mks=Math.max(0,S.mks+d);if(d>0){fx=1;beep("mark")}else if(m>0)beep("knock");var a=rk(id);if(a>b){up=HOB.filter(function(s){return s.id===id})[0].n+" reached "+RN[a-1]+"!";celeb=up}return d}
+function hob(id,m,hasNote){
+  var q=qualityBonus(m,!!hasNote),effective=Math.round(m*q.mult);
+  var o=S.xp[id]||0,b=rk(id),w=Math.max(0,o+effective);S.xp[id]=w;
+  var d=Math.floor(w/60)-Math.floor(o/60);
+  if(m>0)updateStreak();
+  var sb=0;if(d>0&&(S.streak||0)>=7)sb=1;if(d>0&&(S.streak||0)>=14)sb=2;
+  S.mks=Math.max(0,S.mks+d+sb);
+  if(d>0){fx=1;beep("mark")}else if(m>0)beep("knock");
+  var a=rk(id);if(a>b){var hobby=HOB.filter(function(s){return s.id===id})[0];up=(hobby?hobby.n:"Hobby")+" reached "+RN[a-1]+"!";celeb=up}
+  return d;
+}
 function burst(){if(window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches)return;var r=$("cm").getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2;for(var i=0;i<18;i++){var s=document.createElement("i"),a=Math.random()*6.28,d=60+Math.random()*90;s.className="spk";s.style.cssText="left:"+x+"px;top:"+y+"px;--dx:"+Math.cos(a)*d+"px;--dy:"+Math.sin(a)*d+"px;background:"+["#f2c14e","#7fb2ff","#4fd1a0","#fff"][i%4];document.body.appendChild(s);setTimeout(function(e){e.remove()}.bind(null,s),900)}}
 function say(m){var t=$("toast");t.innerHTML=esc(X(m))+(say.snap?' <button class="tbtn" data-a="undosnap">Undo</button>':"");if(say.snap)say.keep=say.snap;t.hidden=false;clearTimeout(say.t);say.t=setTimeout(function(){t.hidden=true},say.snap?6000:3200)}
 function tierDef(){return TIERS.filter(function(t){return t.id===S.tier})[0]}
@@ -457,11 +567,25 @@ function card(o){return'<div class="card" style="--c:'+o.c+'"><span class="em">'
 function btn(a,id,t,s,dis){return'<button class="btn" data-a="'+a+'" data-id="'+id+'"'+(dis?' disabled':'')+'>'+t+'<small>'+s+'</small></button>'}
 function hero(p){var n=nextLm();return'<div class="hero"><div class="ring" style="--p:'+p+'"><b>'+p+'%</b></div><div><div class="ht">&#127757; '+lname(lvOf(S.km))+'</div><p>'+nf(S.tkm)+' km today. '+(n?'Next stop: '+n[0]+', '+nf(n[1]-S.km)+' km away.':'You have walked the whole world.')+'</p></div></div>'}
 
-function vToday(){var L=DL(S.tier),core=L.filter(function(d){return S.done[d.id]}).length,pct=S.convoy?100:Math.round(core/L.length*100),h=(celeb?'<div class="celeb"><div><b>&#127881; Milestone!</b><small>'+celeb+'</small></div><button class="btn" data-a="clrcel">Nice</button></div>':'')+hero(pct)+timePills();
+function vToday(){var L=DL(S.tier),core=L.filter(function(d){return S.done[d.id]}).length,pct=S.convoy?100:Math.round(core/L.length*100),h=(celeb?'<div class="celeb"><div><b>Milestone</b><small>'+celeb+'</small></div><button class="btn" data-a="clrcel">Got it</button></div>':'');
+ if(S.quiet||S.focusMode)h+='<div class="quiet-banner"><span>'+(S.focusMode?"Focus mode · fewer distractions":"Quiet mode · lower stimulation")+'</span><button class="link" data-a="'+(S.focusMode?"focusmode":"quiet")+'" style="margin:0">Turn off</button></div>';
+ h+=hero(pct)+timePills();
  if(!S.convoy&&inConvoyWindow())h+='<div class="celeb" style="border-color:var(--tier)"><div><b>Raife weekend window</b><small>Fri 1 PM – Sun 4 PM. Switch weekend mode on?</small></div><button class="btn" data-a="convoy">Enable</button></div>';
- h+=recap();var nx0=L.filter(function(d){return!S.done[d.id]})[0];if(!S.convoy&&nx0)h+='<button class="start" data-a="duty" data-id="'+nx0.id+'"><span><small>Start here, about '+nx0.m+' min</small><b>'+nx0.n+'</b></span><span class="go">Complete<small>+'+KB(nx0.m)+' km</small></span></button>';if(S.km>0&&Date.now()-(S.lastBackup||0)>6048e5)h+='<div class="celeb" style="border-color:var(--tier)"><div><b>Back up your passport</b><small>Takes a minute and protects your progress.</small></div><button class="btn" data-a="backup">Back up</button></div>';h+=''+todayStory()+'<p class="sub" style="margin:14px 0 6px">Energy today. The tasks change to match.</p><div class="tiers">'+TIERS.map(function(t){return'<button class="tier" data-a="tier" data-id="'+t.id+'" style="--c:var('+t.c+');--w:'+t.w+'" aria-pressed="'+(S.tier===t.id)+'"><i class="bar"></i><b>'+t.n+'</b><small>'+t.s+'</small></button>'}).join("")+'</div>';
+ h+=recap();
+ h+='<p class="sub" style="margin:14px 0 6px">How is your energy? Tasks adapt to this. No wrong answer.</p><div class="tiers">'+TIERS.map(function(t){return'<button class="tier" data-a="tier" data-id="'+t.id+'" style="--c:var('+t.c+');--w:'+t.w+'" aria-pressed="'+(S.tier===t.id)+'"><i class="bar"></i><b>'+t.n+'</b><small>'+t.s+'</small></button>'}).join("")+'</div>';
+ if(S.tier==="red")h+='<div class="red-safe"><b>Red days are valid days.</b> Morning departure + pet walk count fully. Everything else is waived. Rest is progress.</div>';
+ else if(S.tier==="amber")h+='<div class="red-safe" style="border-color:var(--amber);background:color-mix(in srgb,var(--amber) 8%,var(--surf))"><b>Amber is protected capacity.</b> One short check only. Protect the rest of your energy.</div>';
+ var nx0=L.filter(function(d){return!S.done[d.id]})[0];
+ if(!S.convoy&&nx0){
+  h+='<div class="next-block" style="--c:var(--tier)"><small>NEXT · about '+nx0.m+' min</small><b>'+nx0.n+'</b><p class="why">'+esc(nx0.d)+'</p><button class="start" data-a="duty" data-id="'+nx0.id+'" style="margin:0;width:100%"><span><small>One step</small><b>Mark complete</b></span><span class="go">+'+KB(nx0.m)+' km</span></button></div>';
+ } else if(!S.convoy&&pct===100){
+  h+='<div class="next-block" style="--c:var(--green)"><small>DONE FOR TODAY</small><b>'+(S.tier==="red"?"Minimums met. You can stop.":"All clear. You are off the clock.")+'</b><p class="why">Optional: a short hobby log still earns Stamps and distance.</p><button class="btn" data-a="view" data-id="hobbies" style="width:100%;min-height:48px">Open hobbies</button></div>';
+ }
+ if(S.km>0&&Date.now()-(S.lastBackup||0)>6048e5)h+='<div class="celeb" style="border-color:var(--tier)"><div><b>Back up your passport</b><small>Takes a minute and protects your progress.</small></div><button class="btn" data-a="backup">Back up</button></div>';
+ if(!S.focusMode)h+=''+todayStory();
  var tg='<button class="convoy" data-a="off" aria-pressed="'+S.off+'"><span class="sw"></span><span><b>Day off</b><small style="display:block;color:var(--mute);font-size:13px">Swaps Work Blocks for Home Focus. Same distance.</small></span></button><button class="convoy" data-a="convoy" aria-pressed="'+S.convoy+'"><span class="sw"></span><span><b>Raife weekend</b><small style="display:block;color:var(--mute);font-size:13px">Fri 1 PM to Sun 4 PM. Tasks pause.</small></span></button>';
- h+='<div class="modes">'+tg+'</div>';if(!S.convoy){h+='<h2>Today’s tasks</h2><div class="meter"><i style="width:'+pct+'%"></i></div><p class="sub">'+(pct===100?(S.tier==="red"?"Minimums done. Everything else is waived.":"All done. You are off the clock."):core+" of "+L.length+" tasks done. Each one carries you further round the globe.")+'</p><div class="list">'+L.map(function(d){var on=S.done[d.id];return'<button class="card'+(on?' done':'')+'" data-a="duty" data-id="'+d.id+'" aria-pressed="'+(!!on)+'"><span class="em">'+(on?"&#10003;":d.e)+'</span><span><b>'+d.n+'</b><small>'+d.d+' About '+d.m+' min.</small></span><span class="pay">+'+KB(d.m)+'<small>km</small></span></button>'}).join("")+'</div>';
+ if(!S.focusMode)h+='<div class="modes">'+tg+'</div>';
+ if(!S.convoy){h+='<h2>Today’s tasks</h2><div class="meter"><i style="width:'+pct+'%"></i></div><p class="sub">'+(pct===100?(S.tier==="red"?"Minimums done. Everything else is waived.":"All done. You are off the clock."):core+" of "+L.length+" tasks done. Each one carries you further round the globe.")+'</p><div class="list">'+L.map(function(d){var on=S.done[d.id];return'<button class="card'+(on?' done':'')+'" data-a="duty" data-id="'+d.id+'" aria-pressed="'+(!!on)+'"><span class="em">'+(on?"&#10003;":d.e)+'</span><span><b>'+d.n+'</b><small>'+d.d+' About '+d.m+' min.</small></span><span class="pay">+'+KB(d.m)+'<small>km</small></span></button>'}).join("")+'</div>';
   if(S.tier==="green"){var ok=S.done.led1&&S.done.led2,full=L.every(function(d){return S.done[d.id]});h+='<h2>Bonus task</h2><p class="sub">'+(full?"You are off the clock, so this is purely optional.":"Unlocks once both "+(S.off?"Home Focus blocks":"Work Blocks")+" are done.")+'</p><div class="list"><button class="card" data-a="bonus"'+(ok&&S.bonus<5?"":" disabled")+'><span class="em">+</span><span><b>Bonus '+(S.off?"Home Focus":"Work Block")+'</b><small>Extra 45-minute block. '+S.bonus+' of 5 today.</small></span><span class="pay">+'+K(45)+'<small>km</small></span></button>'+(S.bonus?'<button class="link" data-a="unbonus">Undo last bonus block</button>':'')+'</div>'}}
  h+='<h2>Stuck choosing?</h2><p class="sub">Roll for a quick hobby prompt.</p><div class="list">'
   +card({e:"&#127922;",c:"#7b5ea7",n:"Hobby Dice Roll",d:S.fieldMood||"Stuck choosing? Roll for a quick hobby prompt.",r:btn("dice","d","Roll","Prompt")})
@@ -480,11 +604,48 @@ function vJourney(){var i=where(S.km),a=STOPS[i],b=STOPS[i+1],fr=b&&a.d?Math.min
  return h}
 
 function exploredList(){var i=where(S.km),out=[],j;for(j=0;j<=i;j++){if(wishOnly&&!S.wishlist[j])continue;out.push({idx:j,s:STOPS[j],w:!!S.wishlist[j]})}out.sort(function(a,b){return(b.w?1:0)-(a.w?1:0)});return out}
-function vHobbiesAll(){var nx=RW.filter(function(r){return!S.claimed[r[0]]})[0],h='<h2>Hobby hub</h2><p class="sub">Every 60 minutes earns a Stamp. Spend them in the Treats tab or the Passport Shop. Log quick blocks or custom minutes with a session note.</p>';
+function vHobbiesAll(){var nx=RW.filter(function(r){return!S.claimed[r[0]]})[0],h='<h2>Hobby hub</h2><p class="sub">Every 60 minutes earns a Stamp. Log time, follow your year path, and build real mastery.</p>';
+ var sea=currentSeason();
+ h+='<div class="panel" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px"><div><small style="font-weight:800;color:var(--mute)">STREAK</small><div style="font:700 18px var(--head)">'+(S.streak||0)+' day'+(S.streak===1?"":"s")+'</div><small style="color:var(--mute)">'+streakLabel()+(S.graceUsed?" · grace used":"")+'</small></div><div><small style="font-weight:800;color:var(--mute)">SEASON</small><div style="font:700 18px var(--head)">'+esc(sea.n)+'</div><small style="color:var(--mute)">'+esc(sea.desc)+'</small></div></div>';
  if(nx)h+='<div class="panel" style="--c:var(--gem)"><b>Next reward: '+nx[2]+'</b><div class="mini"><i style="width:'+Math.min(100,bal()/nx[0]*100)+'%"></i></div><small style="color:var(--mute)">'+(bal()>=nx[0]?"You can afford this in the Treat shop below.":(nx[0]-bal())+" Stamps to go ("+bal()+" of "+nx[0]+")")+'</small></div>';
  h+='<div class="list">'+HOB.map(function(a){var x=S.xp[a.id]||0,logs=S.hlog.filter(function(l){return l.id===a.id}),t=logs.reduce(function(s,l){return s+l.m},0);
   var jhtml=logs.filter(function(l){return l.n}).map(function(l){return'<div><span>&#128221; '+esc(l.n)+'</span><span>'+l.m+'m</span></div>'}).join("");
-  return'<div class="card hc" style="--c:'+a.c+'"><span class="em">'+a.e+'</span><span><b>'+a.n+'</b><small>'+a.d+'</small><small class="got">'+(t?t+" min today. ":"")+(60-x%60)+' min to the next Stamp</small><div class="mini"><i style="width:'+(x%60)/60*100+'%"></i></div></span><div class="acts2">'+timerBtn(a.id)+'<button class="btn" data-a="hlog" data-id="'+a.id+'" data-m="30">+30 min</button>'+(t?'<button class="link" data-a="hundo" data-id="'+a.id+'">Undo</button>':'')+'<details class="more"><summary>More ways to log</summary><div class="acts2" style="margin:8px 0"><button class="btn" data-a="hlog" data-id="'+a.id+'" data-m="15">+15 min</button><button class="btn" data-a="hlog" data-id="'+a.id+'" data-m="60">+60 min</button></div><div class="cust-row"><input type="number" min="5" max="300" value="20" id="cm-'+a.id+'" aria-label="Custom minutes"><input type="text" placeholder="Session note (patch, route, fold...)" id="cn-'+a.id+'" aria-label="Session note"><button class="btn" data-a="hcust" data-id="'+a.id+'">Log</button></div></details>'+(jhtml?'<div class="jlog" style="width:100%">'+jhtml+'</div>':'')+'</div></div>'}).join("")+'</div>';
+  return'<div class="card hc" style="--c:'+a.c+'"><span class="em">'+a.e+'</span><span><b>'+a.n+'</b><small>'+a.d+'</small><small class="got">'+(t?t+" min today. ":"")+hm(x)+' total · '+(60-x%60)+' min to next Stamp</small><div class="mini"><i style="width:'+(x%60)/60*100+'%"></i></div>'+
+(function(){
+  var cur=objCurrent(a); if(!cur) return "";
+  var wp='<div style="margin-top:8px;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,'+a.c+' 12%,var(--bg));border-left:3px solid '+a.c+'">';
+  wp+='<div style="display:flex;justify-content:space-between;gap:8px;margin-bottom:4px"><span style="font-size:11px;font-weight:800;letter-spacing:.05em;color:var(--mute)">STEP '+cur.step+' OF '+cur.total+(cur.done?" · DONE":"")+'</span><span style="font-size:11px;font-weight:800;color:'+a.c+'">'+esc(cur.task.d)+' · '+cur.task.h+'h</span></div>';
+  wp+='<div style="font-weight:700;line-height:1.35">'+esc(cur.task.t)+'</div>';
+  if(cur.task.link) wp+='<div style="margin-top:6px"><a href="'+esc(cur.task.link)+'" target="_blank" rel="noopener" class="btn" style="display:inline-flex;min-height:34px;padding:4px 12px;font-size:13px">How to →</a></div>';
+  wp+='</div>';
+  var path='<details class="more" style="margin-top:6px"><summary style="font-size:13px;color:var(--mute)">Full year path ('+a.obj.length+' steps)</summary><div style="display:grid;gap:5px;margin-top:8px">';
+  for(var i=0;i<a.obj.length;i++){
+    var task=a.obj[i], done=(S.xp[a.id]||0)/60>=task.h, active=cur&&!cur.done&&cur.step===i+1;
+    var st=active?("background:color-mix(in srgb,"+a.c+" 14%,var(--surf));border-color:"+a.c+";font-weight:700"):(done?"opacity:.55":"");
+    path+='<div style="display:grid;grid-template-columns:22px 1fr auto;gap:8px;align-items:start;padding:7px 10px;border-radius:10px;border:1px solid var(--line);'+st+'"><span style="font-size:11px;font-weight:800;color:var(--mute)">'+(i+1)+'</span><div><div style="font-size:11px;font-weight:800;color:var(--mute);margin-bottom:1px">'+esc(task.d)+' · '+task.h+'h</div><div style="font-size:13px;line-height:1.3">'+(done?"✓ ":"")+esc(task.t)+'</div></div>';
+    path+=task.link?('<a href="'+esc(task.link)+'" target="_blank" rel="noopener" style="font-size:12px;font-weight:800;color:var(--gem);white-space:nowrap">How to</a>'):'';
+    path+='</div>';
+  }
+  path+='</div></details>';
+  // Wins (simple)
+  var wins=(S.wins&&S.wins[a.id])||[];
+  var wh='<div style="margin-top:10px"><div style="font-size:11px;font-weight:800;letter-spacing:.05em;color:var(--mute);margin-bottom:6px">WINS</div>';
+  for(var wi=0;wi<Math.min(wins.length,5);wi++){wh+='<div style="font-size:13px;padding:3px 0;border-bottom:1px solid var(--line)"><b>'+esc(wins[wi].t)+'</b> <span style="color:var(--mute)">'+esc(wins[wi].date||"")+'</span></div>'}
+  if(!wins.length) wh+='<div style="font-size:13px;color:var(--mute)">No wins yet</div>';
+  wh+='<div class="cust-row" style="margin-top:6px"><input type="text" placeholder="Add a win…" id="win-'+a.id+'" aria-label="Win"><button class="btn" data-a="addwin" data-id="'+a.id+'">Add</button></div></div>';
+  // Branch (after 80h)
+  var bh="", br=BRANCHES[a.id], hrs=(S.xp[a.id]||0)/60;
+  if(br && hrs>=80){
+    var chosen=S.branch&&S.branch[a.id];
+    bh='<div style="margin-top:10px;padding:10px 12px;border-radius:12px;border:1px solid var(--line)"><div style="font-size:11px;font-weight:800;letter-spacing:.05em;color:var(--mute);margin-bottom:6px">PATH BRANCH</div>';
+    if(chosen){bh+='<div style="font-weight:700">'+esc(br[chosen]||chosen)+'</div><button class="link" data-a="clearmbranch" data-id="'+a.id+'">Change</button>'}
+    else{bh+='<div style="display:flex;flex-wrap:wrap;gap:6px">';
+      for(var k in br){bh+='<button class="btn" style="min-height:36px;padding:4px 10px;font-size:13px" data-a="setbranch" data-id="'+a.id+'" data-m="'+k+'">'+esc(br[k])+'</button>'}
+      bh+='</div>'}
+    bh+='</div>';
+  }
+  return wp+path+wh+bh;
+})()+'</span><div class="acts2">'+timerBtn(a.id)+'<button class="btn" data-a="hlog" data-id="'+a.id+'" data-m="30">+30 min</button>'+(t?'<button class="link" data-a="hundo" data-id="'+a.id+'">Undo</button>':'')+'<details class="more"><summary>More ways to log</summary><div class="acts2" style="margin:8px 0"><button class="btn" data-a="hlog" data-id="'+a.id+'" data-m="15">+15 min</button><button class="btn" data-a="hlog" data-id="'+a.id+'" data-m="60">+60 min</button></div><div class="cust-row"><input type="number" min="5" max="300" value="20" id="cm-'+a.id+'" aria-label="Custom minutes"><input type="text" placeholder="Session note (patch, route, fold...)" id="cn-'+a.id+'" aria-label="Session note"><button class="btn" data-a="hcust" data-id="'+a.id+'">Log</button></div></details>'+(jhtml?'<div class="jlog" style="width:100%">'+jhtml+'</div>':'')+'</div></div>'}).join("")+'</div>';
  h+='<h2>Treat shop</h2><p class="sub">Treats cost Stamps. Claiming spends them, so choose well.</p><div class="list">'+RW.map(function(r){var c=S.claimed[r[0]],ok=bal()>=r[0],isGrand=r===RW[RW.length-1];
   if(isGrand){
    var ex=exploredList(),opts=ex.map(function(o){var lbl=flag(o.s.c)+' '+o.s.n+(o.w?' (Wishlist)':'');return'<option value="'+o.s.n+'"'+(S.grandPick===o.s.n?' selected':'')+'>'+lbl+'</option>'}).join("");
@@ -493,7 +654,40 @@ function vHobbiesAll(){var nx=RW.filter(function(r){return!S.claimed[r[0]]})[0],
   }
   return card({e:r[1],c:"var(--gem)",n:r[2],d:"Costs "+r[0]+" Stamps",r:c?'<span class="pay" style="--c:var(--mute)">Claimed</span>':btn("claim",r[0],ok?"Spend "+r[0]:"Need "+r[0],"",!ok)})}).join("")+'</div>';return h}
 
-function objFor(a,n){var idx=Math.min(a.obj.length-1,Math.floor(n/2.6));return a.obj[idx]}
+function objCurrent(a){
+  if(!a.obj||!a.obj.length)return null;
+  var hrs=(S.xp[a.id]||0)/60;
+  for(var i=0;i<a.obj.length;i++){
+    if(hrs<(a.obj[i].h||999))return {task:a.obj[i], step:i+1, total:a.obj.length};
+  }
+  return {task:a.obj[a.obj.length-1], step:a.obj.length, total:a.obj.length, done:true};
+}
+function objFor(a,n,plain){
+  var cur=objCurrent(a);
+  if(!cur)return "Keep showing up";
+  var t=cur.task;
+  if(plain)return t.t;
+  var tag='<span style="font-size:11px;font-weight:800;letter-spacing:.04em;opacity:.75">'+esc(t.d)+' · '+t.h+'h</span>';
+  var link=t.link?' <a href="'+esc(t.link)+'" target="_blank" rel="noopener" style="font-size:12px;font-weight:800;color:var(--gem)">How to →</a>':"";
+  return tag+" · "+esc(t.t)+link;
+}
+function objStep(a){var c=objCurrent(a);return c?c.step:1}
+function updateStreak(){
+  var d=today();
+  if(S.lastHobbyDay===d)return;
+  var y=new Date(); y.setDate(y.getDate()-1);
+  var yest=y.toISOString().slice(0,10);
+  if(S.lastHobbyDay===yest){S.streak=(S.streak||0)+1;S.graceUsed=false}
+  else if(S.lastHobbyDay&&!S.graceUsed){S.graceUsed=true}
+  else{S.streak=1;S.graceUsed=false}
+  S.lastHobbyDay=d;
+  if((S.streak||0)>(S.streakBest||0))S.streakBest=S.streak;
+}
+function streakLabel(){var s=S.streak||0;if(s>=30)return"30-day flame";if(s>=14)return"14-day streak";if(s>=7)return"7-day streak";if(s>=3)return"3-day spark";return s?s+"-day streak":"No streak yet"}
+function qualityBonus(m,hasNote){var mult=1;if(m>=45){mult=1.25;S.deepSessions=(S.deepSessions||0)+1}return{mult:mult}}
+function currentSeason(){var m=new Date().getMonth();if(m<3)return{id:"foundations",n:"Foundations",desc:"Build the basics"};if(m<6)return{id:"expression",n:"Expression",desc:"Make things that feel like you"};if(m<9)return{id:"craft",n:"Craft",desc:"Refine technique"};return{id:"mastery",n:"Mastery",desc:"Polish and own your work"}}
+var BRANCHES={music:{live:"Live Performance",studio:"Studio Craft",design:"Sound Design"},origami:{wildlife:"Wildlife Sculptor",geometric:"Geometric / Modular",teacher:"Designer / Teacher"},play:{story:"Story Completist",challenge:"Challenge Runner",ritual:"Shared Ritual"},sail:{solo:"Solo Helm",racing:"Racing Mindset",instruct:"Instructor Path"},boulder:{strength:"Strength & Overhangs",technique:"Technique & Slabs",project:"Project Hunter"},build:{furniture:"Furniture Craftsman",atmosphere:"Atmosphere Designer",systems:"Systems Integrator"}};
+
 var LD=["-168,66 -160,71 -140,70 -125,70 -95,72 -80,68 -62,60 -55,52 -66,45 -70,42 -76,35 -81,31 -80,25 -90,29 -97,26 -105,22 -110,24 -117,32 -124,40 -124,48 -135,58 -150,60 -165,60", "-80,10 -72,12 -62,10 -52,5 -44,-3 -35,-7 -39,-15 -48,-26 -58,-35 -65,-42 -68,-52 -72,-52 -74,-42 -72,-30 -70,-18 -76,-14 -81,-5 -78,2", "-55,60 -45,60 -20,70 -20,82 -45,83 -65,80 -70,76 -58,68", "-9,37 -9,43 -1,46 -5,48 2,51 8,54 8,57 5,59 5,62 14,67 23,70 30,70 40,67 44,68 60,69 70,73 80,73 100,77 115,74 140,72 160,70 180,68 178,64 165,60 156,57 160,52 142,53 140,48 133,43 129,36 126,38 122,40 122,31 118,24 110,21 108,16 106,10 100,13 101,3 98,8 98,16 92,21 88,22 80,15 77,8 73,17 70,22 66,25 57,26 56,24 52,17 44,12 38,20 35,28 34,31 36,36 27,37 26,40 23,37 20,40 14,45 12,44 16,40 10,44 3,43 0,39 -5,36", "-17,21 -13,28 -6,35 10,37 11,33 20,32 32,31 35,28 38,18 43,12 51,12 40,-3 40,-15 35,-25 32,-29 20,-35 16,-28 12,-17 13,-5 9,3 -8,4 -13,9 -17,14", "114,-22 122,-18 130,-12 137,-12 142,-11 146,-19 153,-27 150,-37 141,-38 135,-34 129,-32 115,-34", "-5,50 1,51 2,53 -3,58 -6,56 -3,54 -5,52", "130,31 135,34 141,38 142,45 140,41 135,36", "44,-25 49,-15 48,-13 44,-17", "-24,64 -14,64 -14,66 -22,66", "95,5 98,3 106,-6 104,-6 96,2", "109,2 117,7 119,1 116,-4 110,-3", "172,-35 178,-38 175,-41 172,-41", "-180,-72 -150,-76 -120,-73 -90,-72 -60,-68 -30,-70 0,-70 30,-68 60,-67 90,-66 120,-66 150,-70 180,-72 180,-90 -180,-90"].map(function(p){return p.split(" ").map(function(q){return q.split(",").map(Number)})}),CL=[[-100,40],[-30,50],[20,20],[80,55],[130,10],[-60,-20],[30,-30],[160,-35],[-150,10],[100,-10]],CO=[[0,8],[8,4],[10,-3],[4,-8],[-6,-7],[-10,0],[-6,6]];
 function pj(lo,la,l0,p0){var d=Math.PI/180,a=(lo-l0)*d,x=Math.cos(la*d)*Math.sin(a),y=Math.cos(p0)*Math.sin(la*d)-Math.sin(p0)*Math.cos(la*d)*Math.cos(a),c=Math.sin(p0)*Math.sin(la*d)+Math.cos(p0)*Math.cos(la*d)*Math.cos(a);if(c<0){var m=Math.sqrt(x*x+y*y)||1;x/=m;y/=m}return[56+46*x,56-46*y,c]}
 function pts(pl,l0){return pl.map(function(q){var r=pj(q[0],q[1],l0,gTilt);return r[0].toFixed(1)+" "+r[1].toFixed(1)}).join("L")}
@@ -627,13 +821,115 @@ function legIntro(l,q){var d=LI[l];if(!d){postcard(q);return}sfx("page");ov("leg
 function splash(){var e=document.createElement("div");e.id="splash";e.setAttribute("aria-hidden","true");e.innerHTML='<div class="sp-in"><svg class="ni" viewBox="0 0 24 24">'+IM[127757]+'</svg><b>GLOBETROTTER</b><span>PASSPORT</span></div>';document.body.appendChild(e);setTimeout(function(){e.classList.add("out");setTimeout(function(){e.remove()},500)},S.motion==="off"?300:1500);e.addEventListener("click",function(){e.remove()})}
 function ambStop(){if(!AMB)return;var a=AMB;AMB=null;try{a.g.gain.linearRampToValueAtTime(0,AC.currentTime+.6)}catch(e){}setTimeout(function(){try{a.src.stop()}catch(e){}},700)}
 function ambStart(l){if(S.amb!==true||S.muted){ambStop();return}try{if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();if(AC.state==="suspended")AC.resume();if(AMB&&AMB.l===l)return;ambStop();var P=[[400,"lowpass",.045,.15],[900,"bandpass",.03,.4],[3000,"highpass",.02,.3],[250,"lowpass",.05,.08],[1400,"bandpass",.025,.2],[500,"lowpass",.05,.12],[700,"bandpass",.03,.25]][l%7],b=AC.createBuffer(1,AC.sampleRate*2,AC.sampleRate),d=b.getChannelData(0),i;for(i=0;i<d.length;i++)d[i]=Math.random()*2-1;var src=AC.createBufferSource(),f=AC.createBiquadFilter(),g=AC.createGain(),lf=AC.createOscillator(),lg=AC.createGain();src.buffer=b;src.loop=true;f.type=P[1];f.frequency.value=P[0];g.gain.value=0;lf.frequency.value=P[3];lg.gain.value=P[2]*.6;lf.connect(lg);lg.connect(g.gain);src.connect(f);f.connect(g);g.connect(AC.destination);src.start();lf.start();g.gain.linearRampToValueAtTime(P[2],AC.currentTime+1.5);AMB={l:l,g:g,src:src}}catch(e){}}
-function vHobbies(){var all=vHobbiesAll(),i=all.indexOf("<h2>Treat shop</h2>"),A=i<0?all:all.slice(0,i),B=i<0?"":all.slice(i),m=A.match(/<div class="panel" style="--c:var\(--gem\)"><b>Next reward:.*?<\/small><\/div>/),np=m?m[0]:"";if(np)A=A.replace(np,"");var T=[["track","Track"],["treats","Treats"]],an=window._ht!==hbTab;window._ht=hbTab;return'<div class="seg seg2">'+T.map(function(t){return'<button data-a="hb" data-id="'+t[0]+'" aria-pressed="'+(hbTab===t[0])+'">'+t[1]+'</button>'}).join("")+'</div><div class="'+(an?"pgturn":"")+'">'+(hbTab==="treats"?'<div class="bal"><b>'+bal()+' Stamps</b><small>Earned '+S.mks+', spent '+(S.spent||0)+'. Souvenirs and boosts are in the Passport Shop.</small></div>'+np+B:A)+'</div>'}
+function vHobbies(){
+  // ===== TREATS TAB =====
+  if(hbTab==="treats"){
+    var all=vHobbiesAll(), i=all.indexOf("<h2>Treat shop</h2>"), B=i<0?"":all.slice(i);
+    return '<div class="seg seg2"><button data-a="hb" data-id="track" aria-pressed="false">Track</button><button data-a="hb" data-id="treats" aria-pressed="true">Treats</button></div><div class="pgturn"><div class="bal"><b>'+bal()+' Stamps</b><small>Earned from hobby hours</small></div>'+B+'</div>';
+  }
+
+  // ===== TRACK TAB — one hobby, clear hierarchy =====
+  if(!hbId || !HOB.some(function(h){return h.id===hbId})) hbId=HOB[0].id;
+  var a=HOB.filter(function(h){return h.id===hbId})[0];
+  var x=S.xp[a.id]||0, hrs=x/60, cur=objCurrent(a);
+  var logs=S.hlog.filter(function(l){return l.id===a.id});
+  var todayMin=logs.reduce(function(s,l){return s+l.m},0);
+  var sea=currentSeason();
+  var wins=(S.wins&&S.wins[a.id])||[];
+  var br=BRANCHES[a.id];
+  var chosen=S.branch&&S.branch[a.id];
+
+  // Hobby switcher (compact)
+  var nav='<div style="display:flex;gap:6px;overflow-x:auto;padding:2px 0 10px;-webkit-overflow-scrolling:touch">';
+  HOB.forEach(function(h){
+    var on=h.id===hbId;
+    nav+='<button data-a="hbhobby" data-id="'+h.id+'" aria-pressed="'+on+'" style="flex:none;padding:8px 12px;border-radius:12px;border:1.5px solid '+(on?h.c:"var(--line)")+';background:'+(on?"color-mix(in srgb,"+h.c+" 14%,var(--surf))":"var(--surf)")+';font-weight:800;font-size:13px;white-space:nowrap">'+h.e+' '+esc(h.n)+'</button>';
+  });
+  nav+='</div>';
+
+  // Quiet status line (streak + season + hours) — one line, not a panel
+  var status='<div style="display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:0 0 12px;font-size:13px;color:var(--mute)">';
+  status+='<span><b style="color:var(--ink)">'+(S.streak||0)+'</b> day streak'+(S.graceUsed?" · grace":"")+'</span>';
+  status+='<span>·</span><span>'+esc(sea.n)+' season</span>';
+  status+='<span>·</span><span><b style="color:var(--ink)">'+hm(x)+'</b> on '+esc(a.n)+'</span>';
+  status+='<span>·</span><span>'+(60-x%60)+' min to Stamp</span>';
+  status+='</div>';
+
+  // ===== 1. NOW (primary) =====
+  var now='<div class="panel" style="--c:'+a.c+';border-left:4px solid '+a.c+';margin-bottom:10px">';
+  now+='<div style="font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--mute);margin-bottom:6px">NOW</div>';
+  if(cur){
+    now+='<div style="display:flex;justify-content:space-between;gap:8px;margin-bottom:4px"><span style="font-size:12px;font-weight:800;color:'+a.c+'">Step '+cur.step+' / '+cur.total+(cur.done?" · complete":"")+'</span><span style="font-size:12px;font-weight:800;color:var(--mute)">'+esc(cur.task.d)+' · '+cur.task.h+'h</span></div>';
+    now+='<div style="font:700 17px/1.35 var(--head);margin-bottom:8px">'+esc(cur.task.t)+'</div>';
+    if(cur.task.link) now+='<a class="btn" href="'+esc(cur.task.link)+'" target="_blank" rel="noopener" style="display:inline-flex;min-height:40px;padding:6px 14px;margin-bottom:4px">How to →</a>';
+  } else {
+    now+='<div style="font-weight:700">Keep showing up</div>';
+  }
+  now+='</div>';
+
+  // ===== 2. LOG (always visible, simple) =====
+  var log='<div class="panel" style="margin-bottom:10px">';
+  log+='<div style="font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--mute);margin-bottom:8px">LOG</div>';
+  log+='<div class="acts2">'+timerBtn(a.id)+'<button class="btn" data-a="hlog" data-id="'+a.id+'" data-m="15">+15</button><button class="btn" data-a="hlog" data-id="'+a.id+'" data-m="30">+30</button><button class="btn" data-a="hlog" data-id="'+a.id+'" data-m="60">+60</button>';
+  if(todayMin) log+='<button class="link" data-a="hundo" data-id="'+a.id+'">Undo</button>';
+  log+='</div>';
+  log+='<div class="cust-row" style="margin-top:8px"><input type="number" min="5" max="300" value="20" id="cm-'+a.id+'" aria-label="Minutes"><input type="text" placeholder="Optional note" id="cn-'+a.id+'" aria-label="Note"><button class="btn" data-a="hcust" data-id="'+a.id+'">Log</button></div>';
+  if(todayMin) log+='<div style="margin-top:6px;font-size:13px;color:var(--mute)">'+todayMin+' min today</div>';
+  log+='</div>';
+
+  // ===== 3. DETAILS (collapsed by default — progressive disclosure) =====
+  // Year path
+  var pathInner='';
+  for(var i=0;i<a.obj.length;i++){
+    var task=a.obj[i], done=hrs>=task.h, active=cur&&!cur.done&&cur.step===i+1;
+    var st=active?("background:color-mix(in srgb,"+a.c+" 12%,var(--surf));border-color:"+a.c): (done?"opacity:.5":"");
+    pathInner+='<div style="display:grid;grid-template-columns:28px 1fr auto;gap:8px;align-items:start;padding:8px 10px;border-radius:10px;border:1px solid var(--line);margin-bottom:5px;'+st+'">';
+    pathInner+='<span style="font-size:12px;font-weight:800;color:var(--mute)">'+(i+1)+'</span>';
+    pathInner+='<div><div style="font-size:11px;font-weight:800;color:var(--mute)">'+esc(task.d)+' · '+task.h+'h</div><div style="font-size:14px;line-height:1.35">'+(done?"✓ ":"")+esc(task.t)+'</div></div>';
+    pathInner+=task.link?('<a href="'+esc(task.link)+'" target="_blank" rel="noopener" style="font-size:12px;font-weight:800;color:var(--gem)">How to</a>'):'<span></span>';
+    pathInner+='</div>';
+  }
+
+  // Branch block
+  var branchInner='';
+  if(br && hrs>=80){
+    if(chosen){
+      branchInner='<div style="font-weight:700;margin-bottom:4px">'+esc(br[chosen]||chosen)+'</div><button class="link" data-a="clearmbranch" data-id="'+a.id+'">Change path</button>';
+    } else {
+      branchInner='<div style="font-size:13px;color:var(--mute);margin-bottom:8px">Optional direction for later work:</div><div style="display:flex;flex-wrap:wrap;gap:6px">';
+      for(var k in br) branchInner+='<button class="btn" style="min-height:36px;padding:4px 12px;font-size:13px" data-a="setbranch" data-id="'+a.id+'" data-m="'+k+'">'+esc(br[k])+'</button>';
+      branchInner+='</div>';
+    }
+  }
+
+  // Wins block
+  var winsInner='';
+  if(wins.length){
+    for(var wi=Math.max(0,wins.length-8);wi<wins.length;wi++){
+      winsInner+='<div style="font-size:13px;padding:5px 0;border-bottom:1px solid var(--line)"><b>'+esc(wins[wi].t)+'</b> <span style="color:var(--mute)">'+esc(wins[wi].date||"")+'</span></div>';
+    }
+  } else {
+    winsInner='<div style="font-size:13px;color:var(--mute);margin-bottom:6px">Capture finished work, sends, folds…</div>';
+  }
+  winsInner+='<div class="cust-row" style="margin-top:8px"><input type="text" placeholder="Add a win" id="win-'+a.id+'" aria-label="Win"><button class="btn" data-a="addwin" data-id="'+a.id+'">Add</button></div>';
+
+  var details='';
+  details+='<details class="more" style="margin-bottom:8px"><summary style="font-weight:800">Year path · '+a.obj.length+' steps</summary><div style="margin-top:10px">'+pathInner+'</div></details>';
+  if(br && hrs>=80) details+='<details class="more" style="margin-bottom:8px"><summary style="font-weight:800">Path branch'+(chosen?" · "+esc(br[chosen]||chosen):"")+'</summary><div style="margin-top:10px">'+branchInner+'</div></details>';
+  details+='<details class="more" style="margin-bottom:8px"><summary style="font-weight:800">Wins'+(wins.length?" · "+wins.length:"")+'</summary><div style="margin-top:10px">'+winsInner+'</div></details>';
+
+  // Top chrome
+  var top='<div class="seg seg2"><button data-a="hb" data-id="track" aria-pressed="true">Track</button><button data-a="hb" data-id="treats" aria-pressed="false">Treats</button></div>';
+
+  return top+nav+status+now+log+details;
+}
+
 function mrz(n){return("VISA<"+String(n).toUpperCase().replace(/[^A-Z0-9]+/g,"<")+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<").slice(0,38)}
 function vSkills(){var hrs=S.custom?S.custom.master:200;return'<h2>Visas and skills</h2><p class="sub">Each hobby is a visa. Every rank adds 0.5% to your distance. Visas, reveals and insight give +'+bonusPct().toFixed(1)+'% so far. Master takes '+hrs+' hours.</p>'+SK.map(function(a){var x=S.xp[a.id]||0,n=rk(a.id),nx=TH[n],pv=n?TH[n-1]:0,fr=nx?Math.max(0,Math.min(1,(x-pv)/(nx-pv))):1,C=2*Math.PI*26,rn=n?RN[n-1]:"Unranked",X0=function(i){return 18+i*32.7},Y0=function(i){return 30+8*Math.sin(i*1.2)},d="",p="",o="",i;
 for(i=0;i<9;i++){var sg="M"+X0(i).toFixed(1)+" "+Y0(i).toFixed(1)+"C"+(X0(i)+16).toFixed(1)+" "+Y0(i).toFixed(1)+" "+(X0(i+1)-16).toFixed(1)+" "+Y0(i+1).toFixed(1)+" "+X0(i+1).toFixed(1)+" "+Y0(i+1).toFixed(1);d+='<path d="'+sg+'" class="vr-up"/>';if(i+1<n)p+='<path d="'+sg+'" class="vr-dn"/>'}
 for(i=0;i<10;i++)o+='<circle cx="'+X0(i).toFixed(1)+'" cy="'+Y0(i).toFixed(1)+'" r="6.5" class="vn'+(i<n?" on":i===n?" nx":"")+'"/><text x="'+X0(i).toFixed(1)+'" y="'+(Y0(i)+22).toFixed(1)+'" text-anchor="middle">'+(i+1)+'</text>';
 var t=n?Math.min(9,n-1+(n<10?fr:0)):0,ti=Math.floor(t),tf=t-ti,mx=X0(ti)+(ti<9?(X0(ti+1)-X0(ti))*tf:0),my=Y0(ti)+(ti<9?(Y0(ti+1)-Y0(ti))*tf:0);
-return'<div class="visa" style="--c:'+a.c+'"><span class="rstamp">'+esc(rn.toUpperCase())+'</span><div class="vh"><div class="vring"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="26" class="rg-bg"/><circle cx="32" cy="32" r="26" class="rg-fg" stroke-dasharray="'+(fr*C).toFixed(1)+' '+C.toFixed(1)+'" transform="rotate(-90 32 32)"/></svg><span class="em">'+a.e+'</span></div><div><small>VISA</small><b>'+esc(a.n)+'</b><small style="letter-spacing:0;font-weight:700">'+hm(x)+' practised</small></div></div><svg viewBox="0 0 330 62" class="vroute" role="img" aria-label="Rank '+n+' of 10: '+esc(rn)+'">'+d+p+o+'<g transform="translate('+mx.toFixed(1)+' '+my.toFixed(1)+')"><circle r="11" class="vm"/><path d="M-5 4L6 0L-5-4L-3 0Z" class="vp"/></g></svg><p class="vnext">+'+(n*.5)+'% distance from this visa. '+(nx?"Next: "+esc(RN[n])+" in "+hm(nx-x):"Mastery reached.")+'</p><div class="vgoal"><b>Next waypoint</b>'+objFor(a,n)+'</div><dl class="vd"><div><dt>Difficulty</dt><i class="ld"></i><dd>'+a.diff+'</dd></div><div><dt>Likelihood</dt><i class="ld"></i><dd>'+a.likely+'</dd></div><div><dt>Pace</dt><i class="ld"></i><dd>'+a.pace+'</dd></div><div><dt>Scale</dt><i class="ld"></i><dd>'+a.scale+'</dd></div></dl><div class="mrz" aria-hidden="true">'+esc(mrz(a.n))+'</div></div>'}).join("")}
+return'<div class="visa" style="--c:'+a.c+'"><span class="rstamp">'+esc(rn.toUpperCase())+'</span><div class="vh"><div class="vring"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="26" class="rg-bg"/><circle cx="32" cy="32" r="26" class="rg-fg" stroke-dasharray="'+(fr*C).toFixed(1)+' '+C.toFixed(1)+'" transform="rotate(-90 32 32)"/></svg><span class="em">'+a.e+'</span></div><div><small>VISA</small><b>'+esc(a.n)+'</b><small style="letter-spacing:0;font-weight:700">'+hm(x)+' practised</small></div></div><svg viewBox="0 0 330 62" class="vroute" role="img" aria-label="Rank '+n+' of 10: '+esc(rn)+'">'+d+p+o+'<g transform="translate('+mx.toFixed(1)+' '+my.toFixed(1)+')"><circle r="11" class="vm"/><path d="M-5 4L6 0L-5-4L-3 0Z" class="vp"/></g></svg><p class="vnext">+'+(n*.5)+'% distance from this visa. '+(nx?"Next: "+esc(RN[n])+" in "+hm(nx-x):"Mastery reached.")+'</p><div class="vgoal"><b>Current focus</b>'+objFor(a,n)+'</div><dl class="vd"><div><dt>Difficulty</dt><i class="ld"></i><dd>'+a.diff+'</dd></div><div><dt>Likelihood</dt><i class="ld"></i><dd>'+a.likely+'</dd></div><div><dt>Pace</dt><i class="ld"></i><dd>'+a.pace+'</dd></div><div><dt>Scale</dt><i class="ld"></i><dd>'+a.scale+'</dd></div></dl><div class="mrz" aria-hidden="true">'+esc(mrz(a.n))+'</div></div>'}).join("")}
 
 function mondayOf(d){var x=new Date(d.getFullYear(),d.getMonth(),d.getDate()),diff=(x.getDay()+6)%7;x.setDate(x.getDate()-diff);return x}
 function vReports(){
@@ -694,8 +990,8 @@ function CUR(){return(S.cfg&&S.cfg.cur)||20}
 function fmtH(h){return(h>12?h-12:h)+" "+(h>=12?"PM":"AM")}
 function X(h){var c=S.cfg||{};return String(h).replace(/Nova’s/g,(c.pet||"your dog")+"’s").replace(/Georgie/g,c.partner||"your partner").replace(/Nova/g,c.pet||"your dog").replace(/Raife/g,c.child||"Family").replace(/\b8 PM\b/g,fmtH(CUR()))}
 function iconify(){document.querySelectorAll(".em").forEach(function(el){var p=IM[el.textContent.trim().codePointAt(0)];if(p)el.innerHTML='<svg class="ni" viewBox="0 0 24 24" aria-hidden="true">'+p+'</svg>'})}
-function applyTheme(){var d=document.documentElement;if(S.theme==="dark"||S.theme==="paper")d.setAttribute("data-theme",S.theme);else d.removeAttribute("data-theme");var hr=new Date().getHours(),sk=hr<5?["#0e2038","#1b3a63"]:hr<8?["#f6b98c","#8fb8de"]:hr<17?["#8fc7ee","#d9eefc"]:hr<20?["#e9966b","#4b4f9e"]:["#0e2038","#1b3a63"];d.style.setProperty("--sky1",sk[0]);d.style.setProperty("--sky2",sk[1]);d.setAttribute("data-motion",S.motion||"full")}
-function themeSeg(){return'<p class="sub" style="margin-top:8px">Appearance</p><div class="seg">'+[["auto","Airmail"],["dark","Night flight"],["paper","Paper map"]].map(function(t){return'<button data-a="theme" data-id="'+t[0]+'" aria-pressed="'+((S.theme||"auto")===t[0])+'">'+t[1]+'</button>'}).join("")+'</div>'}
+function applyTheme(){var d=document.documentElement;if(S.theme==="dark"||S.theme==="paper")d.setAttribute("data-theme",S.theme);else d.removeAttribute("data-theme");var hr=new Date().getHours(),sk=hr<5?["#0e2038","#1b3a63"]:hr<8?["#f6b98c","#8fb8de"]:hr<17?["#8fc7ee","#d9eefc"]:hr<20?["#e9966b","#4b4f9e"]:["#0e2038","#1b3a63"];d.style.setProperty("--sky1",sk[0]);d.style.setProperty("--sky2",sk[1]);var mot=S.motion||"full";if(S.quiet)mot="calm";if(!S.motion&&window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches)mot="calm";d.setAttribute("data-motion",mot);d.setAttribute("data-quiet",S.quiet?"on":"off");d.setAttribute("data-focus",S.focusMode?"on":"off")}
+function themeSeg(){return'<p class="sub" style="margin-top:8px">Appearance</p><div class="seg">'+[["auto","Airmail"],["dark","Night flight"],["paper","Paper map"]].map(function(t){return'<button data-a="theme" data-id="'+t[0]+'" aria-pressed="'+((S.theme||"auto")===t[0])+'">'+t[1]+'</button>'}).join("")+'</div><p class="sub" style="margin-top:12px">Sensory &amp; focus (AuDHD-friendly)</p><div class="modes" style="grid-template-columns:1fr 1fr"><button class="convoy" data-a="quiet" aria-pressed="'+!!S.quiet+'"><span class="sw"></span><span><b>Quiet mode</b><small style="display:block;color:var(--mute);font-size:12px">Less motion, flatter UI, calmer colours</small></span></button><button class="convoy" data-a="focusmode" aria-pressed="'+!!S.focusMode+'"><span class="sw"></span><span><b>Focus mode</b><small style="display:block;color:var(--mute);font-size:12px">Today + Hobbies only. Hide the rest</small></span></button></div>'}
 function stamp(t){sfx("thud");var e=document.createElement("div");e.className="stampfx";e.setAttribute("aria-hidden","true");e.innerHTML="<span>"+esc(t)+"</span>";document.body.appendChild(e);setTimeout(function(){e.remove()},1900)}
 function recap(){var n=new Date();if(n.getDay()!==1)return"";var m=mondayOf(n),p=new Date(m.getFullYear(),m.getMonth(),m.getDate()-7),km=0,t=0,mi=0;Object.keys(S.hist).forEach(function(k){var d=parseKey(k);if(d>=p&&d<m){var i=S.hist[k];km+=i.km||0;t+=i.done||0;mi+=i.hmin||0}});if(!km&&!t&&!mi)return"";return'<div class="bp"><div class="bp-main"><small>FLIGHT LOG, LAST WEEK</small><b>'+nf(km)+' km</b><span>'+t+' tasks done, '+hm(mi)+' of hobbies</span></div><div class="bp-stub" aria-hidden="true"></div></div>'}
 function setup(){var c=S.cfg||{};openModal('<h3>Set up your passport</h3><p>Names appear in prompts. Stored on this device only.</p>'+[["name","Your name",c.name],["partner","Partner",c.partner],["pet","Pet",c.pet],["child","Child or family",c.child]].map(function(f){return'<label class="fl2">'+f[1]+'<input class="inp" id="cf-'+f[0]+'" value="'+esc(f[2]||"")+'" autocomplete="off"></label>'}).join("")+'<label class="fl2">Evening touchdown<select class="inp" id="cf-cur">'+[17,18,19,20,21,22].map(function(h){return'<option value="'+h+'"'+(CUR()===h?" selected":"")+'>'+fmtH(h)+'</option>'}).join("")+'</select></label>'+packSel()+'<label class="fl2">Route<select class="inp" id="cf-route"><option value="world">World loop (7 legs)</option><option value="europe"'+(c.route==="europe"?" selected":"")+'>Europe only (1 leg)</option></select></label><div class="row" style="margin-top:12px"><button class="btn" data-a="savecfg">Save</button><button class="btn" data-a="skipcfg">Skip for now</button></div>',document.activeElement)}
@@ -713,15 +1009,17 @@ function render(){applyCustom();var t=tierDef();document.documentElement.style.s
 function act(a,id,x,el){roll();var rc0=el&&el.getBoundingClientRect?el.getBoundingClientRect():null;say.snap=" duty bonus hlog hcust claim dice chreset chdel rwdel chblank ".indexOf(" "+a+" ")>-1?JSON.stringify(S):null;
  if(a==="view"){V=id;render();window.scrollTo(0,0);return}
  if(a==="mute"){S.muted=!S.muted;save();render();return}
+ if(a==="quiet"){S.quiet=!S.quiet;if(S.quiet&&!S.motion)S.motion="calm";save();render();return}
+ if(a==="focusmode"){S.focusMode=!S.focusMode;if(S.focusMode){S.quiet=true;V="today"}save();render();return}
  if(a==="clrcel"){celeb="";render();return}
- if(a==="tier")S.tier=id;
+ if(a==="tier"){S.tier=id;S.tierSet=true}
  else if(a==="convoy")S.convoy=!S.convoy;
  else if(a==="off")S.off=!S.off;
- else if(a==="duty"){var d=DL(S.tier).filter(function(q){return q.id===id})[0],on=!S.done[id];if(on){S.done[id]=KB(d.m);addKm(KB(d.m));if(rc0&&S.motion!=="off")floatText("+"+KB(d.m)+" km",rc0);beep("knock");say("+"+KB(d.m)+" km. "+d.n+" complete.")}else{addKm(-(S.done[id]>1?S.done[id]:KB(d.m)));delete S.done[id]}}
- else if(a==="chsave"){chCollect();applyCustom();say("Saved.")}else if(a==="packadd"){var pv=$("ch-pack").value;if(PACKS[pv]){addPack(pv);say("Pack added to your hobbies.")}}else if(a==="chblank"){blankSet();say("Blank set ready. Add your hobbies and rewards.")}else if(a==="introtog"){S.intro=(S.intro===false)}else if(a==="introshow"){showIntro();return}else if(a==="shareimg"){var cv=shareImg();cv.toBlob(function(b){var f=new File([b],"passport.png",{type:"image/png"});if(navigator.canShare&&navigator.canShare({files:[f]}))navigator.share({files:[f],title:"My Globetrotter Passport"}).catch(function(){});else ov("shareimg","Passport image",'<div class="pg"><small>Press and hold the image to save it</small><img class="pc-img" style="display:block" alt="Your passport" src="'+cv.toDataURL("image/png")+'"><button class="btn" data-i="ok">Close</button></div>',function(i,el){el.close()})});return}else if(a==="xfercopy"){xEnc(function(c){try{navigator.clipboard.writeText(c)}catch(e){}say("Transfer code copied. Paste it on your other device under Use transfer code.")});return}else if(a==="xferuse"){openModal('<h3>Use transfer code</h3><p>Paste the code from your other device. This replaces the data on this one.</p><textarea class="inp" id="xf-txt" rows="5" aria-label="Transfer code"></textarea><div class="row" style="margin-top:10px"><button class="btn" data-a="xferapply">Apply</button></div>',el);return}else if(a==="xferapply"){xDec($("xf-txt").value,function(o){if(restoreObj(o)){closeModal();render();say("Transferred.")}else say("That code is not valid.")},function(){say("That code is not valid.")});return}else if(a==="pp"){ppTab=id}else if(a==="cb"){cbTab=id}else if(a==="hb"){hbTab=id}else if(a==="buysouv"){var bj=+id,bp=souvPrice(bj);if(S.own[bj])say("Already in your collection.");else if(spend(bp)){S.own[bj]=1;sfx("thud");say("Added to your collection. -"+bp+" Stamps")}else say("Not enough Stamps. Hobby hours earn them.")}else if(a==="buytail"){if(Date.now()<(S.tailEnd||0))say("Tailwind is already active.");else if(spend(3)){S.tailEnd=Date.now()+3*864e5;sfx("chime");say("Tailwind active for 3 days: +10% distance.")}else say("Not enough Stamps.")}else if(a==="buyvisa"){var vp=8+2*(S.vboost||0);if((S.vboost||0)>=10)say("Visa boost is maxed.");else if(spend(vp)){S.vboost=(S.vboost||0)+1;sfx("chime");say("Visa boost: +0.5% distance for good.")}else say("Not enough Stamps.")}else if(a==="buycover"){var cv=+id;if(S.covers[cv])S.cover=cv;else if(spend(COV[cv][3])){S.covers[cv]=1;S.cover=cv;sfx("chime");say("New cover unlocked.")}else say("Not enough Stamps.")}else if(a==="ambtog"){S.amb=!(S.amb===true)}else if(a==="wpcheck"){var wi=$("wp-in"),wv=wi?nz(wi.value):"",wd=wpData(+id);if(wv&&wd.ans.indexOf(wv)>-1)wpSolve(+id);else say("Not quite. Try again, or take a hint.")}else if(a==="wpans"){if(+x===wpData(+id).ci)wpSolve(+id);else say("Close, but not this one. Try another.")}else if(a==="wphint"){S.wph[id]=1}else if(a==="wpshow"){S.wp[id]="a"}else if(a==="pzcheck"){var pi=$("pz-in"),pv=pi?nz(pi.value):"",PP=PZ[+id],pok=pv&&(PP[2].indexOf(pv)>-1||(+id===6&&S.cfg&&nz(S.cfg.name)===pv));if(pok){S.pz[id]="s";S.insight=(S.insight||0)+1;sfx("chime");say("Puzzle solved. +1 Insight.")}else say("Not quite. Try again, or take a hint.")}else if(a==="pzhint"){S.pzh[id]=1}else if(a==="pzshow"){S.pz[id]="a"}else if(a==="comp"){S.comp=+id}else if(a==="detour"){if(S.dtDay!==today()){S.dtDay=today();S.detours=(S.detours||0)+1;S.insight=(S.insight||0)+1;say("Detour complete. +1 Insight.")}}else if(a==="chapter"){var ck=chapNow();if(ck&&!S.chap[ck.k]){S.chap[ck.k]=1;S.insight=(S.insight||0)+2;say("Chapter task complete. +2 Insight.")}}else if(a==="tour"){showTour();return}else if(a==="layshow"){layover(id);return}else if(a==="pcopen"){postcard(STOPS.filter(function(x){return x.n===id})[0]);return}else if(a==="motion"){S.motion=id}else if(a==="sfxtog"){S.sfx=(S.sfx===false)}else if(a==="chadd"){chCollect().hob.push({id:"h"+Date.now(),e:"&#127942;",n:"New hobby",d:"",c:"#2a6fb0",diff:"Your pace",likely:"Steady",pace:"2h / wk",scale:"1m: Start · 6m: Steady · 1y: Skilled",obj:["First small step","Build a routine","Stretch yourself","Show it off"]});applyCustom()}else if(a==="chdel"){var cc=chCollect();if(cc.hob.length>1){cc.hob.splice(+id,1);applyCustom();say("Hobby removed.")}else say("Keep at least one hobby.")}else if(a==="rwadd"){var c2=chCollect();c2.rw.push([c2.rw[c2.rw.length-1][0]+50,"&#127942;","New reward"]);applyCustom()}else if(a==="rwdel"){var c3=chCollect();if(c3.rw.length>1){c3.rw.splice(+id,1);applyCustom();say("Reward removed.")}else say("Keep at least one reward.")}else if(a==="chreset"){S.custom=null;applyCustom();say("Defaults restored.")}else if(a==="tstart"){S.timer={id:id,t:Date.now()};lay=id;say("Timer started.")}else if(a==="tstop"){var tm=S.timer;S.timer=null;if(tm){S.timedDone=(S.timedDone||0)+1;act("hlog",tm.id,Math.max(1,Math.round((Date.now()-tm.t)/60000)))}return}else if(a==="csv"){var rw=["date,km,tasks,hobby_minutes,energy"];Object.keys(S.hist).sort().forEach(function(k){var i=S.hist[k];rw.push([k,Math.round(i.km||0),i.done||0,i.hmin||0,i.tier||""].join(","))});var cs=rw.join("\n");try{navigator.clipboard.writeText(cs)}catch(e){}try{var bl=new Blob([cs],{type:"text/csv"}),ur=URL.createObjectURL(bl),an=document.createElement("a");an.href=ur;an.download="globetrotter-history.csv";an.click();setTimeout(function(){URL.revokeObjectURL(ur)},1500)}catch(e){}say("History copied and exported.");return}else if(a==="theme"){S.theme=id}else if(a==="undosnap"){if(say.keep){S=JSON.parse(say.keep);norm();applyCustom();say.keep=null}}else if(a==="setup"){setup();return}else if(a==="skipcfg"){S.cfg={cur:20,route:"world"};closeModal()}else if(a==="savecfg"){var pk=$("cf-pack")?$("cf-pack").value:"none",cu=$("cf-cust")&&$("cf-cust").checked,o0=(S.cfg||{}).route||"world",nr=$("cf-route").value,v=function(k){return $("cf-"+k).value.trim()};S.cfg={name:v("name"),partner:v("partner"),pet:v("pet"),child:v("child"),cur:+$("cf-cur").value,route:nr};if($("cf-base")&&$("cf-base").value==="blank"){blankSet();cu=true}if(PACKS[pk])addPack(pk);if(cu)V="customise";closeModal();if(nr!==o0){save();location.reload();return}say("Saved.")}else if(a==="bonus"){S.bonus++;addKm(K(45));beep("knock");say("+"+K(45)+" km. Bonus block logged.")}
+ else if(a==="duty"){var d=DL(S.tier).filter(function(q){return q.id===id})[0],on=!S.done[id];if(on){S.done[id]=KB(d.m);addKm(KB(d.m));if(rc0&&S.motion!=="off"&&!S.quiet)floatText("+"+KB(d.m)+" km",rc0);beep("knock");var left=DL(S.tier).filter(function(q){return!S.done[q.id]&&q.id!==id}).length;say("+"+KB(d.m)+" km · "+d.n+(left?(". Next: "+left+" left."):(". That is enough for today.")))}else{addKm(-(S.done[id]>1?S.done[id]:KB(d.m)));delete S.done[id]}}
+ else if(a==="chsave"){chCollect();applyCustom();say("Saved.")}else if(a==="packadd"){var pv=$("ch-pack").value;if(PACKS[pv]){addPack(pv);say("Pack added to your hobbies.")}}else if(a==="chblank"){blankSet();say("Blank set ready. Add your hobbies and rewards.")}else if(a==="introtog"){S.intro=(S.intro===false)}else if(a==="introshow"){showIntro();return}else if(a==="shareimg"){var cv=shareImg();cv.toBlob(function(b){var f=new File([b],"passport.png",{type:"image/png"});if(navigator.canShare&&navigator.canShare({files:[f]}))navigator.share({files:[f],title:"My Globetrotter Passport"}).catch(function(){});else ov("shareimg","Passport image",'<div class="pg"><small>Press and hold the image to save it</small><img class="pc-img" style="display:block" alt="Your passport" src="'+cv.toDataURL("image/png")+'"><button class="btn" data-i="ok">Close</button></div>',function(i,el){el.close()})});return}else if(a==="xfercopy"){xEnc(function(c){try{navigator.clipboard.writeText(c)}catch(e){}say("Transfer code copied. Paste it on your other device under Use transfer code.")});return}else if(a==="xferuse"){openModal('<h3>Use transfer code</h3><p>Paste the code from your other device. This replaces the data on this one.</p><textarea class="inp" id="xf-txt" rows="5" aria-label="Transfer code"></textarea><div class="row" style="margin-top:10px"><button class="btn" data-a="xferapply">Apply</button></div>',el);return}else if(a==="xferapply"){xDec($("xf-txt").value,function(o){if(restoreObj(o)){closeModal();render();say("Transferred.")}else say("That code is not valid.")},function(){say("That code is not valid.")});return}else if(a==="pp"){ppTab=id}else if(a==="cb"){cbTab=id}else if(a==="hb"){hbTab=id}else if(a==="hbhobby"){hbId=id}else if(a==="hbhobby"){hbId=id}else if(a==="buysouv"){var bj=+id,bp=souvPrice(bj);if(S.own[bj])say("Already in your collection.");else if(spend(bp)){S.own[bj]=1;sfx("thud");say("Added to your collection. -"+bp+" Stamps")}else say("Not enough Stamps. Hobby hours earn them.")}else if(a==="buytail"){if(Date.now()<(S.tailEnd||0))say("Tailwind is already active.");else if(spend(3)){S.tailEnd=Date.now()+3*864e5;sfx("chime");say("Tailwind active for 3 days: +10% distance.")}else say("Not enough Stamps.")}else if(a==="buyvisa"){var vp=8+2*(S.vboost||0);if((S.vboost||0)>=10)say("Visa boost is maxed.");else if(spend(vp)){S.vboost=(S.vboost||0)+1;sfx("chime");say("Visa boost: +0.5% distance for good.")}else say("Not enough Stamps.")}else if(a==="buycover"){var cv=+id;if(S.covers[cv])S.cover=cv;else if(spend(COV[cv][3])){S.covers[cv]=1;S.cover=cv;sfx("chime");say("New cover unlocked.")}else say("Not enough Stamps.")}else if(a==="ambtog"){S.amb=!(S.amb===true)}else if(a==="wpcheck"){var wi=$("wp-in"),wv=wi?nz(wi.value):"",wd=wpData(+id);if(wv&&wd.ans.indexOf(wv)>-1)wpSolve(+id);else say("Not quite. Try again, or take a hint.")}else if(a==="wpans"){if(+x===wpData(+id).ci)wpSolve(+id);else say("Close, but not this one. Try another.")}else if(a==="wphint"){S.wph[id]=1}else if(a==="wpshow"){S.wp[id]="a"}else if(a==="pzcheck"){var pi=$("pz-in"),pv=pi?nz(pi.value):"",PP=PZ[+id],pok=pv&&(PP[2].indexOf(pv)>-1||(+id===6&&S.cfg&&nz(S.cfg.name)===pv));if(pok){S.pz[id]="s";S.insight=(S.insight||0)+1;sfx("chime");say("Puzzle solved. +1 Insight.")}else say("Not quite. Try again, or take a hint.")}else if(a==="pzhint"){S.pzh[id]=1}else if(a==="pzshow"){S.pz[id]="a"}else if(a==="comp"){S.comp=+id}else if(a==="detour"){if(S.dtDay!==today()){S.dtDay=today();S.detours=(S.detours||0)+1;S.insight=(S.insight||0)+1;say("Detour complete. +1 Insight.")}}else if(a==="chapter"){var ck=chapNow();if(ck&&!S.chap[ck.k]){S.chap[ck.k]=1;S.insight=(S.insight||0)+2;say("Chapter task complete. +2 Insight.")}}else if(a==="tour"){showTour();return}else if(a==="layshow"){layover(id);return}else if(a==="pcopen"){postcard(STOPS.filter(function(x){return x.n===id})[0]);return}else if(a==="motion"){S.motion=id}else if(a==="sfxtog"){S.sfx=(S.sfx===false)}else if(a==="chadd"){chCollect().hob.push({id:"h"+Date.now(),e:"&#127942;",n:"New hobby",d:"",c:"#2a6fb0",diff:"Your pace",likely:"Steady",pace:"2h / wk",scale:"1m: Start · 6m: Steady · 1y: Skilled",obj:["First small step","Build a routine","Stretch yourself","Show it off"]});applyCustom()}else if(a==="chdel"){var cc=chCollect();if(cc.hob.length>1){cc.hob.splice(+id,1);applyCustom();say("Hobby removed.")}else say("Keep at least one hobby.")}else if(a==="rwadd"){var c2=chCollect();c2.rw.push([c2.rw[c2.rw.length-1][0]+50,"&#127942;","New reward"]);applyCustom()}else if(a==="rwdel"){var c3=chCollect();if(c3.rw.length>1){c3.rw.splice(+id,1);applyCustom();say("Reward removed.")}else say("Keep at least one reward.")}else if(a==="chreset"){S.custom=null;applyCustom();say("Defaults restored.")}else if(a==="tstart"){S.timer={id:id,t:Date.now()};lay=id;say("Timer started.")}else if(a==="tstop"){var tm=S.timer;S.timer=null;if(tm){S.timedDone=(S.timedDone||0)+1;act("hlog",tm.id,Math.max(1,Math.round((Date.now()-tm.t)/60000)))}return}else if(a==="csv"){var rw=["date,km,tasks,hobby_minutes,energy"];Object.keys(S.hist).sort().forEach(function(k){var i=S.hist[k];rw.push([k,Math.round(i.km||0),i.done||0,i.hmin||0,i.tier||""].join(","))});var cs=rw.join("\n");try{navigator.clipboard.writeText(cs)}catch(e){}try{var bl=new Blob([cs],{type:"text/csv"}),ur=URL.createObjectURL(bl),an=document.createElement("a");an.href=ur;an.download="globetrotter-history.csv";an.click();setTimeout(function(){URL.revokeObjectURL(ur)},1500)}catch(e){}say("History copied and exported.");return}else if(a==="theme"){S.theme=id}else if(a==="undosnap"){if(say.keep){S=JSON.parse(say.keep);norm();applyCustom();say.keep=null}}else if(a==="setup"){setup();return}else if(a==="skipcfg"){S.cfg={cur:20,route:"world"};closeModal()}else if(a==="savecfg"){var pk=$("cf-pack")?$("cf-pack").value:"none",cu=$("cf-cust")&&$("cf-cust").checked,o0=(S.cfg||{}).route||"world",nr=$("cf-route").value,v=function(k){return $("cf-"+k).value.trim()};S.cfg={name:v("name"),partner:v("partner"),pet:v("pet"),child:v("child"),cur:+$("cf-cur").value,route:nr};if($("cf-base")&&$("cf-base").value==="blank"){blankSet();cu=true}if(PACKS[pk])addPack(pk);if(cu)V="customise";closeModal();if(nr!==o0){save();location.reload();return}say("Saved.")}else if(a==="bonus"){S.bonus++;addKm(K(45));beep("knock");say("+"+K(45)+" km. Bonus block logged.")}
  else if(a==="unbonus"){S.bonus--;addKm(-K(45))}
  
- else if(a==="dice"){var pick=HOB[Math.floor(Math.random()*HOB.length)];S.fieldMood="Try "+pick.n+": "+objFor(pick,rk(pick.id));beep("knock");say("Rolled: "+pick.n)}
+ else if(a==="dice"){var pick=HOB[Math.floor(Math.random()*HOB.length)];S.fieldMood="Try "+pick.n+": "+objFor(pick,rk(pick.id),true);beep("knock");say("Rolled: "+pick.n)}
  else if(a==="wish"){if(S.wishlist[id])delete S.wishlist[id];else{S.wishlist[id]=1;beep("knock");say("Added "+STOPS[id].n+" to your wishlist.")}}
  else if(a==="jumpcur"){var cur=where(S.km),leg=0;LS.forEach(function(s,l){if(cur>=s&&cur<=LE[l])leg=l});openLegs["leg-"+leg]=true;render();var det=$("leg-"+leg);if(det)det.open=true;var row=$("stop-"+cur);if(row)row.scrollIntoView({behavior:"smooth",block:"center"});return}
  else if(a==="stopinfo"){
@@ -734,8 +1032,11 @@ function act(a,id,x,el){roll();var rc0=el&&el.getBoundingClientRect?el.getBoundi
  }
  else if(a==="savestop"){S.stopNotes[id]=$("st-note").value.trim();closeModal();say("Stop note saved.")}
  else if(a==="wishfilt"){wishOnly=!wishOnly;render();return}
- else if(a==="hlog"){var m=+x;S.hlog.push({id:id,m:m});var dm=hob(id,m);say(dm>0?"+"+dm+" Stamp"+(dm>1?"s":"")+". "+m+" minutes logged.":m+" minutes logged.")}
- else if(a==="hcust"){var m=Math.max(5,Math.min(300,+$("cm-"+id).value||20)),n=$("cn-"+id).value.trim();S.hlog.push({id:id,m:m,n:n});var dm=hob(id,m);say(dm>0?"+"+dm+" Stamp. "+m+"m logged.":m+"m logged.")}
+ else if(a==="hlog"){var m=+x;S.hlog.push({id:id,m:m});var dm=hob(id,m,false);say(dm>0?"+"+dm+" Stamp"+(dm>1?"s":"")+". "+m+" minutes logged.":m+" minutes logged.")}
+ else if(a==="hcust"){var m=Math.max(5,Math.min(300,+$("cm-"+id).value||20)),n=$("cn-"+id).value.trim();S.hlog.push({id:id,m:m,n:n});var dm=hob(id,m,!!n);say(dm>0?"+"+dm+" Stamp. "+m+"m logged.":m+"m logged.")}
+ else if(a==="setbranch"){S.branch=S.branch||{};S.branch[id]=x;say("Path chosen")}
+ else if(a==="clearmbranch"){if(S.branch)delete S.branch[id];say("Path cleared")}
+ else if(a==="addwin"){var note=(($("win-"+id)||{}).value||"").trim();if(!note){say("Write a short win first.");return}S.wins=S.wins||{};S.wins[id]=S.wins[id]||[];S.wins[id].push({t:note,date:today()});if($("win-"+id))$("win-"+id).value="";say("Win added")}
  else if(a==="hundo"){for(var i=S.hlog.length-1;i>=0;i--)if(S.hlog[i].id===id){var u=S.hlog[i].m;S.hlog.splice(i,1);hob(id,-u);break}}
  else if(a==="claim"){var cpr=+id;if(!S.claimed[id]&&spend(cpr)){S.claimed[id]=1;beep("mark");say("Treat claimed. Go and enjoy it. -"+cpr+" Stamps")}else say("Not enough Stamps yet.")}
  else if(a==="calprev"){calDate.setMonth(calDate.getMonth()-1)}
